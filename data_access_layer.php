@@ -1,21 +1,25 @@
 <?php
 // Database configuration
-$servername = '127.0.0.1';
-$username = 'amr_web_shop_user';
-$password = 'Amr-ma,236037';
-$dbname = 'amr_webshop';
-
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-if (!$conn)
+function connectToDatabase()
 {
-  die("Connection failed: " . mysqli_connect_error());
+  $servername = '127.0.0.1';
+  $username = 'amr_web_shop_user';
+  $password = 'Amr-ma,236037';
+  $dbname = 'amr_webshop';
+
+  // Create connection 
+  $conn = mysqli_connect($servername, $username, $password, $dbname);
+  if (!$conn)
+  {
+    die("Connection failed: " . mysqli_connect_error());
+  }
+  return $conn;
 }
 
 // users database
 function findUserByEmail($email)
 {
-  global $conn;
+  $conn = connectToDatabase();
   $sql = "SELECT * FROM users WHERE email = ?"; // Select all columns
   $stmt = mysqli_prepare($conn, $sql);
 
@@ -44,7 +48,7 @@ function findUserByEmail($email)
 
 function findEmailById($id)
 {
-  global $conn;
+  $conn = connectToDatabase();
   $sql = "SELECT email FROM users WHERE id = ?";
   $stmt = mysqli_prepare($conn, $sql);
 
@@ -79,7 +83,7 @@ function findEmailById($id)
 
 function saveUser($email, $name, $password)
 {
-  global $conn; // Use the global connection variable
+  $conn = connectToDatabase();
   $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
   $sql = "INSERT INTO users (email, name, password) VALUES (?, ?, ?)";
   $stmt = mysqli_prepare($conn, $sql);
@@ -92,7 +96,7 @@ function saveUser($email, $name, $password)
 
 function getAdminStatus($userId)
 {
-  global $conn;
+  $conn = connectToDatabase();
 
   $sql = "SELECT is_admin FROM users WHERE id = ?";
   $stmt = mysqli_prepare($conn, $sql);
@@ -129,7 +133,7 @@ function getAdminStatus($userId)
 // products database
 function getProducts()
 {
-  global $conn;
+  $conn = connectToDatabase();
   $sql = "SELECT * FROM products";
   $stmt = mysqli_prepare($conn, $sql);
 
@@ -162,7 +166,7 @@ function getProducts()
 
 function getProductById($id)
 {
-  global $conn;
+  $conn = connectToDatabase();
 
   if (!$conn)
   {
@@ -201,7 +205,7 @@ function getProductById($id)
 
 function insertOrder($userId, $cartItems)
 {
-  global $conn;
+  $conn = connectToDatabase();
 
   // Start transaction
   mysqli_begin_transaction($conn);
@@ -245,7 +249,7 @@ function insertOrder($userId, $cartItems)
 
 function getTop5Products()
 {
-  global $conn;
+  $conn = connectToDatabase();
 
   $sql = "SELECT p.id, p.name, p.file_name, SUM(ol.quantity_per_product) AS total_quantity
           FROM orders o
@@ -272,7 +276,7 @@ function getTop5Products()
 
 function saveProduct($productName, $productPrice, $productDescription, $imageName)
 {
-  global $conn;
+  $conn = connectToDatabase();
 
   // Prepare an INSERT statement
   $sql = "INSERT INTO products (name, price, description, file_name) VALUES (?, ?, ?, ?)";
@@ -297,27 +301,27 @@ function saveProduct($productName, $productPrice, $productDescription, $imageNam
 
 function editProduct($id, $productName, $productPrice, $productDescription, $imageName)
 {
-    global $conn;
+  $conn = connectToDatabase();
 
-    // Prepare an UPDATE statement
-    $sql = "UPDATE products SET name = ?, price = ?, description = ?, file_name = ? WHERE id = ?";
-    $stmt = mysqli_prepare($conn, $sql);
+  // Prepare an UPDATE statement
+  $sql = "UPDATE products SET name = ?, price = ?, description = ?, file_name = ? WHERE id = ?";
+  $stmt = mysqli_prepare($conn, $sql);
 
-    if (!$stmt)
-    {
-        die('Statement preparation failed: ' . mysqli_error($conn));
-    }
+  if (!$stmt)
+  {
+    die('Statement preparation failed: ' . mysqli_error($conn));
+  }
 
-    // Bind parameters to the prepared statement
-    mysqli_stmt_bind_param($stmt, "sdssi", $productName, $productPrice, $productDescription, $imageName, $id);
+  // Bind parameters to the prepared statement
+  mysqli_stmt_bind_param($stmt, "sdssi", $productName, $productPrice, $productDescription, $imageName, $id);
 
-    // Execute the statement and check for success
-    $success = mysqli_stmt_execute($stmt);
+  // Execute the statement and check for success
+  $success = mysqli_stmt_execute($stmt);
 
-    // Close the statement
-    mysqli_stmt_close($stmt);
+  // Close the statement
+  mysqli_stmt_close($stmt);
 
-    return $success;
+  return $success;
 }
 
 
