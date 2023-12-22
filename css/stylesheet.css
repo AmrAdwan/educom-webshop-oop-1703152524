@@ -1,0 +1,89 @@
+/* Cascade Style Sheet for this website */
+
+/* HTML and Body */
+html {
+  height: 100%;
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 {
+  min-height: 48px;
+  text-align: center;
+}
+
+.text {
+  font-size: 12px;
+  color: darkgray;
+  background-color: white;
+}
+
+ul.menu {
+  list-style: none; /* Removes bullets */
+  padding: 0; /* Removes default padding */
+  margin: 0; /* Removes default margin */
+}
+
+ul.menu li {
+  display: inline-block; /* Displays list items in a line */
+  margin-right: 10px; /* Adds some space between menu items */
+}
+
+ul.menu li > a {
+  color: white; /* Sets text color to white */
+  background-color: rgb(85, 189, 224); /* Sets background color to blue */
+  text-decoration: none; /* Removes underline from links */
+  padding: 5px 10px; /* Adds some padding around the link text */
+}
+.input {
+  width: 400px;
+}
+.quantity {
+  width: 2.5%;
+  text-align: center;
+}
+
+label {
+  display: inline-block;
+  width: 50px;
+}
+
+.select {
+  width: 243px;
+  text-align: center;
+}
+
+footer {
+  background-color: black;
+  color: white;
+  font-size: 10px;
+  text-align: right;
+}
+
+.error {
+  color: red;
+}
+
+.column {
+  float: left;
+  width: 40%;
+  padding: 15px;
+}
+
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.btn-block{
+  width: 80%;
+  align-content: center;
+  align-self: center;
+}
+.btn-primary{
+  background-color: rgb(42, 160, 228);
+  color: white;
+  cursor: pointer;
+}
