@@ -10,9 +10,16 @@ classDiagram
     BasicDoc <|-- HomeDoc
     BasicDoc <|-- AboutDoc
     BasicDoc <|-- FormDoc
+    BasicDoc <|-- WebShopDoc
+    BasicDoc <|-- Top5Doc
+    BasicDoc <|-- ProductDetailsDoc
 
     FormDoc <|-- ContactDoc
     FormDoc <|-- LoginDoc
+    FormDoc <|-- RegisterDoc
+    FormDoc <|-- ChangePasswordDoc
+    FormDoc <|-- AddProductDoc
+    FormDoc <|-- EditProductDoc
 
     class HtmlDoc{
        +show()
@@ -48,6 +55,18 @@ classDiagram
     class FormDoc{
         <<abstract>>
     }
+    class WebShopDoc{
+        #showHeader()
+        #showContent()
+    }
+    class Top5Doc{
+        #showHeader()
+        #showContent()
+    }
+    class ProductDetailsDoc{
+        #showHeader()
+        #showContent()
+    }
     class ContactDoc{
         #showHeader()
         #showContent()
@@ -56,5 +75,22 @@ classDiagram
         #showHeader()
         #showContent()
     }
+    class RegisterDoc{
+        #showHeader()
+        #showContent()
+    }
+    class ChangePasswordDoc{
+        #showHeader()
+        #showContent()
+    }
+    class AddProductDoc{
+        #showHeader()
+        #showContent()
+    }
+    class EditProductDoc{
+        #showHeader()
+        #showContent()
+    }
+    
 
 ```
