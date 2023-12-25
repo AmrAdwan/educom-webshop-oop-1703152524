@@ -27,7 +27,7 @@ function processRequest($page)
       $data = validateLogin();
       if ($data['logvalid'])
       {
-        doLoginUser($data['id'], $data['name']);
+        doLoginUser($data['id'], $data['logname']);
         $page = 'home';
       }
       break;

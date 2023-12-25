@@ -28,6 +28,11 @@ function getVar($key, $default = '')
   return $default;
 }
 
+function logError($msg)
+{
+  echo "LOGGING TO THE SERVER LOG: " . $msg;
+}
+
 function validateLogin()
 {
   $loginData = [
@@ -57,31 +62,73 @@ function validateLogin()
       $errors['logpassword'] = 'Please enter your password.';
     }
 
+    // if (empty($errors))
+    // {
+    //   try
+    //   {
+    //     // Use authenticateUser function from user_service.php 
+    //     $userResult = authenticateUser($loginData['logemail'], $loginData['logpassword']);
+    //     switch ($userResult["result"])
+    //     {
+    //       case RESULT_OK:
+    //         $_SESSION['user_name'] = ['logemail' => $loginData['logemail'], 'logname' => $userResult['name'], 'id' => $userResult['id']];
+    //         $name = $userResult['name'];
+    //         $id = $userResult['id'];
+
+    //         $logvalid = true;
+    //         break;
+    //       case RESULT_UNKNOWN_USER:
+    //         $errors['logemail'] = 'Email address not found. Please try again or register.';
+    //         break;
+    //       case RESULT_WRONG_PASSWORD:
+    //         $errors['logpassword'] = 'Incorrect password. Please try again.';
+    //         break;
+    //     }
+    //   } catch (Exception $e)
+    //   {
+    //     logError("Authentication failed: " . $e->getMessage());
+    //     $errorrs['generic'] = "there is a technical issue, please try later";
+    //   }
+    // }
+
     if (empty($errors))
     {
-      // Use authenticateUser function from user_service.php
-      $user = authenticateUser($loginData['logemail'], $loginData['logpassword']);
-      if ($user)
+      try
       {
-        $_SESSION['user_name'] = ['email' => $loginData['logemail'], 'logname' => $user['name'], 'id' => $user['id']];
-        $name = $user['name'];
-        $id = $user['id'];
-
-        $logvalid = true;
-      } else
-      {
-        if (!doesEmailExist($loginData['logemail']))
-          $errors['logemail'] = 'Email address not found. Please try again or register.';
-        else
+        // Use authenticateUser function from user_service.php 
+        $userResult = authenticateUser($loginData['logemail'], $loginData['logpassword']);
+        switch ($userResult["result"])
         {
-          $errors['logpassword'] = 'Incorrect password. Please try again.';
+          case RESULT_OK:
+            $user = $userResult["user"]; // Get the user array from the result
+            $_SESSION['user_name'] = [
+              'logemail' => $loginData['logemail'],
+              'logname' => $user['name'], // Use the 'name' from the user array
+              'id' => $user['id'] // Use the 'id' from the user array
+            ];
+            $name = $user['name'];
+            $id = $user['id'];
+
+            $logvalid = true;
+            break;
+          case RESULT_UNKNOWN_USER:
+            $errors['logemail'] = 'Email address not found. Please try again or register.';
+            break;
+          case RESULT_WRONG_PASSWORD:
+            $errors['logpassword'] = 'Incorrect password. Please try again.';
+            break;
         }
+      } catch (Exception $e)
+      {
+        logError("Authentication failed: " . $e->getMessage());
+        $errors['generic'] = "There is a technical issue, please try later";
       }
     }
+
   }
   return [
     'logvalid' => $logvalid,
-    'name' => $name,
+    'logname' => $name,
     'id' => $id,
     'errors' => $errors,
     'loginData' => $loginData
@@ -280,19 +327,25 @@ function validateChangePassword()
   }
   if (empty($errors))
   {
-
-    $id = $_SESSION['user_id'];
-    $email = findEmailById($id);
-
-    $user = findUserByEmail($email);
-
-    if ($user && password_verify($changeData['old_password'], $user['password']))
+    try
     {
-      $changevalid = true;
-    } else
+      $id = $_SESSION['user_id'];
+      $email = findEmailById($id);
+
+      $user = findUserByEmail($email);
+
+      if ($user && password_verify($changeData['old_password'], $user['password']))
+      {
+        $changevalid = true;
+      } else
+      {
+        if (!empty($changeData['old_password']))
+          $errors['old_password'] = 'Incorrect old password.';
+      }
+    } catch (Exception $e)
     {
-      if (!empty($changeData['old_password']))
-        $errors['old_password'] = 'Incorrect old password.';
+      logError("Registration failed: " + $e->getMessage());
+      $errorrs['generic'] = "there is a technical issue, please try later";
     }
   }
   return [

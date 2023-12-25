@@ -37,6 +37,9 @@ function showLoginForm($loginResult)
     echo "<button type=\"Submit\">Send</button>";
     echo "</form>";
     echo "</div>";
+  } else 
+  {
+    echo getErrorLogin($loginResult, 'generic');
   }
 }
 ?>

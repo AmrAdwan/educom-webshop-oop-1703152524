@@ -49,6 +49,9 @@ function showRegisterForm($registerResult)
     echo "<br>";
     echo "<button type=\"Submit\">Send</button>";
     echo "</form>";
+  }else 
+  {
+    echo getErrorLogin($registerResult, 'generic');
   }
 }
 ?>
