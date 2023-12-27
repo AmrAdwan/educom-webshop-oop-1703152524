@@ -32,7 +32,7 @@ class WebshopDoc extends BasicDoc
 
       // Link to product details page
       echo "<a href='index.php?page=product_details&product_id=" . $product['id'] . "' style='cursor: pointer;'>";
-      echo "<img src='../Images/" . $product['file_name'] . "' alt='" . htmlspecialchars($product['name']) . "' style='width: 45%;' />";
+      echo "<img src='Images/" . $product['file_name'] . "' alt='" . htmlspecialchars($product['name']) . "' style='width: 45%;' />";
       echo "</a>";
       echo "<h3> id: " . $product['id'] . "</h3>";
       echo "<h3>" . $product['name'] . "</h3>";

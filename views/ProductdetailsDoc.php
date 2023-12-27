@@ -15,7 +15,7 @@ class ProductdetailsDoc extends BasicDoc
     {
       echo "<br>";
       echo "<div class='product-detail'>";
-      echo "<img src='../Images/" . htmlspecialchars($product['file_name']) . "' alt='" . htmlspecialchars($product['name']) . "' style='width: 60%;' />";
+      echo "<img src='Images/" . htmlspecialchars($product['file_name']) . "' alt='" . htmlspecialchars($product['name']) . "' style='width: 60%;' />";
       echo "<h2>" . htmlspecialchars($product['name']) . "</h2>";
       echo "<h3>Price: €" . htmlspecialchars($product['price']) . "</h3>";
       echo "<h3>Description: " . htmlspecialchars($product['description']) . "</h3>";

@@ -20,13 +20,14 @@ abstract class FormDoc extends BasicDoc
   private function showTitle()
   {
     echo "<title>";
-    echo $this->data["title"];
+    // echo $this->data['page'];
+    echo ucfirst($this->data['page']);
     echo "</title>";
   }
 
   private function showCssLinks()
   {
-    echo "<link rel=\"stylesheet\" href=\"../CSS/stylesheet.css\">";
+    echo "<link rel=\"stylesheet\" href=\"./CSS/stylesheet.css\">";
     echo "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">";
     echo "<link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">";
   }
@@ -36,7 +37,7 @@ abstract class FormDoc extends BasicDoc
     echo "<div class=\"text\">";
     $this->showMenu();
     $this->showContent();
-    $this->showForm();
+    // $this->showForm();
     echo "</div>";
     $this->showFooter();
   }
@@ -74,7 +75,7 @@ abstract class FormDoc extends BasicDoc
 
   protected function showContent()
   {
-
+    $this->showForm();
   }
 
   abstract protected function showForm();

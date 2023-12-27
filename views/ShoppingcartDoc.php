@@ -24,7 +24,7 @@ class ShoppingcartDoc extends BasicDoc
     {
       echo "<div class='cart-item'>";
       echo "<a href='index.php?page=product_details&product_id=" . $item['id'] . "' style='cursor: pointer;'>";
-      echo "<img src='../Images/" . $item['file_name'] . "' alt='" . $item['name'] . "' style='width: 25%;' />";
+      echo "<img src='Images/" . $item['file_name'] . "' alt='" . $item['name'] . "' style='width: 25%;' />";
       echo "</a>";
 
       echo "<h3>" . $item['name'] . "</h3>";

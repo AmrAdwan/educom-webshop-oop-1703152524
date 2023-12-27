@@ -20,6 +20,18 @@ include 'edit_product.php';
 include 'views/HtmlDoc.php';
 include 'views/BasicDoc.php';
 include 'views/HomeDoc.php';
+include 'views/AboutDoc.php';
+include 'views/ContactDoc.php';
+include 'views/RegisterDoc.php';
+include 'views/LoginDoc.php';
+include 'views/Top5Doc.php';
+include 'views/WebshopDoc.php';
+include 'views/AddproductDoc.php';
+include 'views/EditproductDoc.php';
+include 'views/ShoppingcartDoc.php';
+include 'views/ProductdetailsDoc.php';
+include 'views/ChangePasswordDoc.php';
+
 
 
 function processRequest($page)
@@ -112,8 +124,12 @@ function processRequest($page)
       if ($data['addvalid'])
       {
         $addProductData = $data['addData'];
-        saveProduct($addProductData['prodname'], $addProductData['proddescription'],
-          $addProductData['prodprice'], $addProductData['prodimage']['name']);
+        saveProduct(
+          $addProductData['prodname'],
+          $addProductData['proddescription'],
+          $addProductData['prodprice'],
+          $addProductData['prodimage']['name']
+        );
         $page = 'webshop';
       }
       break;
@@ -129,8 +145,13 @@ function processRequest($page)
           if ($data['editvalid'])
           {
             $editData = $data['editData'];
-            editProduct($editData['editid'], $editData['editname'], $editData['editprice'], $editData['editdescription'],
-              $editData['editimage']);
+            editProduct(
+              $editData['editid'],
+              $editData['editname'],
+              $editData['editprice'],
+              $editData['editdescription'],
+              $editData['editimage']
+            );
             $page = 'webshop';
           }
         }
@@ -383,9 +404,22 @@ function showHtmlEnd()
 function getRequestedPage()
 {
   // A list of allowed pages
-  $allowedPages = ['home', 'about', 'contact', 'register', 'login', 'logout',
-    'change_password', 'thanks', 'webshop', 'product_details', 'shoppingcart',
-    'top5', 'add_product', 'edit_product'];
+  $allowedPages = [
+    'home',
+    'about',
+    'contact',
+    'register',
+    'login',
+    'logout',
+    'change_password',
+    'thanks',
+    'webshop',
+    'product_details',
+    'shoppingcart',
+    'top5',
+    'add_product',
+    'edit_product'
+  ];
 
   // Check if it's a POST request
   if ($_SERVER['REQUEST_METHOD'] === 'POST')
@@ -410,15 +444,74 @@ function getRequestedPage()
   return '404';
 }
 
+// function showResponsePage($data)
+// {
+//   // TODO een grote switch!
+
+//   showHtmlstatement();
+//   showHeadSection($data);
+//   showBodySection($data);
+//   showHtmlEnd();
+// }
+
 function showResponsePage($data)
 {
-  // TODO een grote switch!
+  // var_dump($data);
+  if (!isset($data['page']))
+  {
+    // Handle the case where 'page' is not set
+    echo "Page not specified";
+    return;
+  }
 
-  showHtmlstatement();
-  showHeadSection($data);
-  showBodySection($data);
-  showHtmlEnd();
+  switch ($data['page'])
+  {
+    case 'about':
+      $data['title'] = 'About';
+      $doc = new AboutDoc($data);
+      break;
+    case 'add_product':
+      $doc = new AddproductDoc($data);
+      break;
+    case 'edit_product':
+      $doc = new EditproductDoc($data);
+      break;
+    case 'top5':
+      $doc = new Top5Doc($data);
+      break;
+    case 'product_details':
+      $doc = new ProductdetailsDoc($data);
+      break;
+    case 'home':
+      $doc = new HomeDoc($data);
+      break;
+    case 'change_password':
+      $doc = new ChangePasswordDoc($data);
+      break;
+    case 'register':
+      $doc = new RegisterDoc($data);
+      break;
+    case 'contact':
+      $doc = new ContactDoc($data);
+      break;
+    case 'login':
+      $doc = new LoginDoc($data);
+      break;
+    case 'shopping_cart':
+      $doc = new ShoppingcartDoc($data);
+      break;
+    case 'webshop':
+      $doc = new WebshopDoc($data);
+      break;
+    default:
+      echo "Page not found";
+      return;
+  }
+
+  // Assuming each Doc class has a method to render the page
+  $doc->show();
 }
+
 
 $page = getRequestedPage();
 $data = processRequest($page);
