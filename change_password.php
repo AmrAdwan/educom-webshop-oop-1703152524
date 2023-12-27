@@ -36,7 +36,7 @@ function showChangePasswordForm($changeResult)
     echo "</span>";
     echo "<br>";
     echo "<br>";
-    echo "<button type=\"Submit\">Send</button>";
+    echo "<button type=\"Submit\">Change Password</button>";
     echo "</form>";
     echo "</div>";
   }

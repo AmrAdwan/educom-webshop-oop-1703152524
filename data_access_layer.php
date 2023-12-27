@@ -1,10 +1,6 @@
 <?php
 // Database configuration
 
-// function logError($msg)
-// {
-//   echo "LOGGING TO THE SERVER LOG: " . $msg;
-// }
 function connectToDatabase()
 {
   $servername = '127.0.0.1';

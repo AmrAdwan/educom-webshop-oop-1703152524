@@ -1,8 +1,9 @@
 <?php
-include_once "HtmlDoc.php";
+include_once "BasicDoc.php";
 // require_once "../data_access_layer.php";
 // require_once "../session_manager.php";
-class BasicDoc extends HtmlDoc
+
+abstract class ProductDoc extends BasicDoc 
 {
   protected $data;
   public function __construct($data)
@@ -37,6 +38,7 @@ class BasicDoc extends HtmlDoc
     echo "<div class=\"text\">";
     $this->showMenu();
     $this->showContent();
+    $this->showForm();
     echo "</div>";
     $this->showFooter();
   }
@@ -62,7 +64,6 @@ class BasicDoc extends HtmlDoc
       'webshop' => 'Webshop',
       'top5' => 'Top 5'
     );
-    
     echo '<nav>' . PHP_EOL;
     echo '<ul class="menu">' . PHP_EOL;
     foreach ($menu['menu'] as $link => $label)
@@ -84,6 +85,9 @@ class BasicDoc extends HtmlDoc
     echo "<p>&copy; Amr Adwan 2023</p>";
     echo "</footer>";
   }
-}
 
+  abstract protected function showForm();
+
+  abstract protected function getError($form, $key);
+}
 ?>

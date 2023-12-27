@@ -1,4 +1,6 @@
 <?php
+// require_once "../data_access_layer.php";
+// require_once "../session_manager.php";
 class HtmlDoc
 {
   public $page;

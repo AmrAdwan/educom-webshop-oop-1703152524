@@ -57,4 +57,4 @@ function showAddProductForm($addProductResult)
     echo "</div>";
   }
 }
-// }
+?>

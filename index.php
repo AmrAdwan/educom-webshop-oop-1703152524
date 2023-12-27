@@ -17,6 +17,9 @@ include 'shoppingcart.php';
 include 'top5.php';
 include 'add_product.php';
 include 'edit_product.php';
+include 'views/HtmlDoc.php';
+include 'views/BasicDoc.php';
+include 'views/HomeDoc.php';
 
 
 function processRequest($page)
@@ -409,6 +412,8 @@ function getRequestedPage()
 
 function showResponsePage($data)
 {
+  // TODO een grote switch!
+
   showHtmlstatement();
   showHeadSection($data);
   showBodySection($data);

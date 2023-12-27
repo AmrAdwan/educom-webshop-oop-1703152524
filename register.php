@@ -51,7 +51,7 @@ function showRegisterForm($registerResult)
     echo "</form>";
   }else 
   {
-    echo getErrorLogin($registerResult, 'generic');
+    echo getErrorRegister($registerResult, 'generic');
   }
 }
 ?>
