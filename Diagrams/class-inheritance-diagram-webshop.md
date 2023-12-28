@@ -9,17 +9,20 @@ classDiagram
 
     BasicDoc <|-- HomeDoc
     BasicDoc <|-- AboutDoc
-    BasicDoc <|-- FormDoc
+    BasicDoc <|-- FormsDoc
+    BasicDoc <|-- ProductDoc
+    BasicDoc <|-- ShoppingcartDoc
     BasicDoc <|-- WebShopDoc
     BasicDoc <|-- Top5Doc
     BasicDoc <|-- ProductDetailsDoc
 
-    FormDoc <|-- ContactDoc
-    FormDoc <|-- LoginDoc
-    FormDoc <|-- RegisterDoc
-    FormDoc <|-- ChangePasswordDoc
-    FormDoc <|-- AddProductDoc
-    FormDoc <|-- EditProductDoc
+    FormsDoc <|-- ContactDoc
+    FormsDoc <|-- LoginDoc
+    FormsDoc <|-- RegisterDoc
+    FormsDoc <|-- ChangePasswordDoc
+
+    ProductDoc <|-- AddProductDoc
+    ProductDoc <|-- EditProductDoc
 
     class HtmlDoc{
        +show()
@@ -52,7 +55,10 @@ classDiagram
         #showHeader()
         #showContent()
     }
-    class FormDoc{
+    class FormsDoc{
+        <<abstract>>
+    }
+    class ProductDoc{
         <<abstract>>
     }
     class WebShopDoc{
@@ -69,27 +75,33 @@ classDiagram
     }
     class ContactDoc{
         #showHeader()
-        #showContent()
+        #getError()
+        #showForm()
     }
     class LoginDoc{
         #showHeader()
-        #showContent()
+        #getError()
+        #showForm()
     }
     class RegisterDoc{
         #showHeader()
-        #showContent()
+        #getError()
+        #showForm()
     }
     class ChangePasswordDoc{
         #showHeader()
-        #showContent()
+        #getError()
+        #showForm()
     }
     class AddProductDoc{
         #showHeader()
-        #showContent()
+        #getError()
+        #showForm()
     }
     class EditProductDoc{
         #showHeader()
-        #showContent()
+        #getError()
+        #showForm()
     }
     
 
