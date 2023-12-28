@@ -1,6 +1,4 @@
 <?php
-// session_start();
-
 include 'home.php';
 include 'about.php';
 include '404.php';
@@ -31,6 +29,9 @@ include 'views/EditproductDoc.php';
 include 'views/ShoppingcartDoc.php';
 include 'views/ProductdetailsDoc.php';
 include 'views/ChangePasswordDoc.php';
+include 'views/ErrorDoc.php';
+include 'controllers/PageController.php';
+// include 'models/PageModel.php';
 
 
 
@@ -454,65 +455,67 @@ function getRequestedPage()
 //   showHtmlEnd();
 // }
 
-function showResponsePage($data)
-{
-  // var_dump($data);
-  if (!isset($data['page']))
-  {
-    // Handle the case where 'page' is not set
-    echo "Page not specified";
-    return;
-  }
+// function showResponsePage($data)
+// {
+//   // var_dump($data);
+//   if (!isset($data['page']))
+//   {
+//     // Handle the case where 'page' is not set
+//     echo "Page not specified";
+//     return;
+//   }
 
-  switch ($data['page'])
-  {
-    case 'about':
-      $data['title'] = 'About';
-      $doc = new AboutDoc($data);
-      break;
-    case 'add_product':
-      $doc = new AddproductDoc($data);
-      break;
-    case 'edit_product':
-      $doc = new EditproductDoc($data);
-      break;
-    case 'top5':
-      $doc = new Top5Doc($data);
-      break;
-    case 'product_details':
-      $doc = new ProductdetailsDoc($data);
-      break;
-    case 'home':
-      $doc = new HomeDoc($data);
-      break;
-    case 'change_password':
-      $doc = new ChangePasswordDoc($data);
-      break;
-    case 'register':
-      $doc = new RegisterDoc($data);
-      break;
-    case 'contact':
-      $doc = new ContactDoc($data);
-      break;
-    case 'login':
-      $doc = new LoginDoc($data);
-      break;
-    case 'shopping_cart':
-      $doc = new ShoppingcartDoc($data);
-      break;
-    case 'webshop':
-      $doc = new WebshopDoc($data);
-      break;
-    default:
-      echo "Page not found";
-      return;
-  }
+//   switch ($data['page'])
+//   {
+//     case 'about':
+//       $data['title'] = 'About';
+//       $doc = new AboutDoc($data);
+//       break;
+//     case 'add_product':
+//       $doc = new AddproductDoc($data);
+//       break;
+//     case 'edit_product':
+//       $doc = new EditproductDoc($data);
+//       break;
+//     case 'top5':
+//       $doc = new Top5Doc($data);
+//       break;
+//     case 'product_details':
+//       $doc = new ProductdetailsDoc($data);
+//       break;
+//     case 'home':
+//       $doc = new HomeDoc($data);
+//       break;
+//     case 'change_password':
+//       $doc = new ChangePasswordDoc($data);
+//       break;
+//     case 'register':
+//       $doc = new RegisterDoc($data);
+//       break;
+//     case 'contact':
+//       $doc = new ContactDoc($data);
+//       break;
+//     case 'login':
+//       $doc = new LoginDoc($data);
+//       break;
+//     case 'shopping_cart':
+//       $doc = new ShoppingcartDoc($data);
+//       break;
+//     case 'webshop':
+//       $doc = new WebshopDoc($data);
+//       break;
+//     default:
+//       echo "Page not found";
+//       return;
+//   }
 
-  // Assuming each Doc class has a method to render the page
-  $doc->show();
-}
+//   // Assuming each Doc class has a method to render the page
+//   $doc->show();
+// }
 
-
-$page = getRequestedPage();
-$data = processRequest($page);
-showResponsePage($data);
+$model = new PageModel();
+$controller = new PageController($model);
+$controller->handleRequest();
+// $page = getRequestedPage();
+// $data = processRequest($page);
+// showResponsePage($data);

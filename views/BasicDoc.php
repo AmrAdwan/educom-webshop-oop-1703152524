@@ -1,13 +1,14 @@
 <?php
 include_once "HtmlDoc.php";
-// require_once "../data_access_layer.php";
-// require_once "../session_manager.php";
+include_once __DIR__ . "/../models/PageModel.php";
 class BasicDoc extends HtmlDoc
 {
-  protected $data;
-  public function __construct($data)
+  // protected $data;
+  protected $model;
+  public function __construct($model)
   {
-    $this->data = $data;
+    $this->model = $model;
+    // $this->data = $data;
   }
 
 
@@ -22,7 +23,8 @@ class BasicDoc extends HtmlDoc
   {
     echo "<title>";
     // echo $this->data['title'];
-    echo ucfirst($this->data['page']);
+    // echo ucfirst($this->data['page']);
+    echo ucfirst($this->model->getData('page'));
     echo "</title>";
   }
 

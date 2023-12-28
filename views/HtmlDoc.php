@@ -3,7 +3,7 @@
 // require_once "../session_manager.php";
 class HtmlDoc
 {
-  public $page;
+  // public $page;
   public function show()
   {
     $this->showHtmlStart();
@@ -17,7 +17,7 @@ class HtmlDoc
 
   }
   private function showHtmlStart()
-  {    
+  {
     echo "<!DOCTYPE html>\n";
     echo "<html>";
   }
