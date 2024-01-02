@@ -3,10 +3,10 @@ include_once "BasicDoc.php";
 
 abstract class FormDoc extends BasicDoc
 {
-  protected $data;
-  public function __construct($data)
+  // protected $data;
+  public function __construct($model)
   {
-    $this->data = $data;
+    $this->model = $model;
   }
 
 
@@ -21,7 +21,8 @@ abstract class FormDoc extends BasicDoc
   {
     echo "<title>";
     // echo $this->data['page'];
-    echo ucfirst($this->data['page']);
+    // echo ucfirst($this->data['page']);
+    echo ucfirst($this->model->getData('page'));
     echo "</title>";
   }
 
@@ -44,7 +45,7 @@ abstract class FormDoc extends BasicDoc
 
   protected function showHeader()
   {
-    
+
     // echo "<h1>";
     // echo $this->data["header"];
     // echo "</h1>";
@@ -54,24 +55,92 @@ abstract class FormDoc extends BasicDoc
   {
     echo "<li><a href=\"index.php?page=$link\">$label</a></li>";
   }
+  // private function showMenu()
+  // {
+  //   $menu['menu'] = array(
+  //     'home' => 'Home',
+  //     'about' => 'About',
+  //     'contact' => 'Contact',
+  //     'webshop' => 'Webshop',
+  //     'top5' => 'Top 5'
+  //   );
+  //   echo '<nav>' . PHP_EOL;
+  //   echo '<ul class="menu">' . PHP_EOL;
+  //   foreach ($menu['menu'] as $link => $label)
+  //   {
+  //     $this->showMenuItem($link, $label);
+  //   }
+  //   echo '</ul>' . PHP_EOL;
+  //   echo '</nav>' . PHP_EOL;
+  // }
+
+  // private function showMenu()
+  // {
+  //   // Default menu items
+  //   $menuItems = [
+  //     'home' => 'Home',
+  //     'about' => 'About',
+  //     'contact' => 'Contact',
+  //     'webshop' => 'Webshop',
+  //     'top5' => 'Top 5'
+  //   ];
+
+  //   // Check if the user is logged in
+  //   if ($this->model->getData('isLoggedIn'))
+  //   {
+  //     // Add 'Logout' and other user-specific items to the menu
+  //     $menuItems['shoppingcart'] = 'ShoppingCart';
+  //     $menuItems['logout'] = 'Logout[' . $this->model->getData('userName') . ']';
+  //     $menuItems['change_password'] = 'Change Password';
+  //   } else
+  //   {
+  //     // Add 'Register' and 'Login' to the menu for guests
+  //     $menuItems['register'] = 'Register';
+  //     $menuItems['login'] = 'Login';
+  //   }
+
+  //   echo '<nav>' . PHP_EOL;
+  //   echo '<ul class="menu">' . PHP_EOL;
+  //   foreach ($menuItems as $link => $label)
+  //   {
+  //     $this->showMenuItem($link, $label);
+  //   }
+  //   echo '</ul>' . PHP_EOL;
+  //   echo '</nav>' . PHP_EOL;
+  // }
+
   private function showMenu()
   {
-    $menu['menu'] = array(
+    $menuItems = [
       'home' => 'Home',
       'about' => 'About',
       'contact' => 'Contact',
       'webshop' => 'Webshop',
       'top5' => 'Top 5'
-    );
+    ];
+
+    if ($this->model->getData('isLoggedIn'))
+    {
+      $menuItems['shoppingcart'] = 'ShoppingCart';
+      $menuItems['logout'] = 'Logout[' . $this->model->getData('userName') . ']';
+      $menuItems['change_password'] = 'Change Password';
+    } else
+    {
+      $menuItems['register'] = 'Register';
+      $menuItems['login'] = 'Login';
+    }
+
     echo '<nav>' . PHP_EOL;
     echo '<ul class="menu">' . PHP_EOL;
-    foreach ($menu['menu'] as $link => $label)
+    foreach ($menuItems as $link => $label)
     {
       $this->showMenuItem($link, $label);
     }
     echo '</ul>' . PHP_EOL;
     echo '</nav>' . PHP_EOL;
   }
+
+
 
   protected function showContent()
   {

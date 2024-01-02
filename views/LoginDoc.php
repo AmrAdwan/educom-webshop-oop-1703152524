@@ -7,6 +7,13 @@ class LoginDoc extends FormDoc
   {
     echo "<h1>Login</h1>";
   }
+
+  protected function showContent()
+  {
+    $loginResult = $this->model->getData('loginData');
+    $this->showForm($loginResult);
+  }
+
   protected function getError($loginResult, $key)
   {
     return isset($loginResult['errors'][$key]) ? $loginResult['errors'][$key] : '';

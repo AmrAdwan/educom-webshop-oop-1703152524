@@ -6,6 +6,13 @@ class RegisterDoc extends FormDoc
   {
     echo "<h1>Register</h1>";
   }
+
+  protected function showContent()
+  {
+    $registerResult = $this->model->getData('registerData');
+    $this->showForm($registerResult);
+  }
+
   protected function getError($registerResult, $key)
   {
     return isset($registerResult['errors'][$key]) ? $registerResult['errors'][$key] : '';

@@ -8,6 +8,13 @@ class ChangePasswordDoc extends FormDoc
     echo "<h1>Change Password</h1>";
   }
 
+  protected function showContent()
+  {
+    $changeResult = $this->model->getData('changeData');
+    $this->showForm($changeResult);
+
+  }
+
   protected function getError($changeResult, $key)
   {
     return isset($changeResult['errors'][$key]) ? $changeResult['errors'][$key] : '';

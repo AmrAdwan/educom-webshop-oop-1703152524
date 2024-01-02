@@ -9,8 +9,11 @@ class ProductdetailsDoc extends BasicDoc
     echo "<h1>Product Details</h1>";
   }
 
-  protected function showContent($product = [])
+  protected function showContent()
   {
+    // Retrieve product data from the model
+    $product = $this->model->getData('product');
+
     if ($product)
     {
       echo "<br>";

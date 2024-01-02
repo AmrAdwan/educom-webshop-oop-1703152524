@@ -8,17 +8,17 @@ class ContactDoc extends FormDoc
     echo "<h1>Contact</h1>";
   }
 
-  // protected $formResult;
+  protected function showContent()
+  {
+    $formResult = $this->model->getData('formResult');
+    $this->showForm($formResult);
+
+  }
+
   protected function getError($formResult, $key)
   {
     return isset($formResult['errors'][$key]) ? $formResult['errors'][$key] : '';
   }
-
-  // protected function showContent()
-  // {
-  //   // showContactForm($formResult);
-
-  // }
 
   protected function showForm($formResult = [])
   {

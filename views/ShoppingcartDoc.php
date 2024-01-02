@@ -104,7 +104,7 @@ class ShoppingcartDoc extends BasicDoc
 
 
 
-  protected function addToCart($productId)
+  public function addToCart($productId)
   {
     if (!isset($_SESSION['cart']))
     {
@@ -122,7 +122,7 @@ class ShoppingcartDoc extends BasicDoc
   }
 
 
-  protected function getCartItems()
+  public function getCartItems()
   {
     if (!isset($_SESSION['cart']))
     {
@@ -181,7 +181,7 @@ class ShoppingcartDoc extends BasicDoc
   protected function processCheckout()
   {
     $userId = $_SESSION['user_id'];
-    $cartItems = getCartItems();
+    $cartItems = $this->getCartItems();
     // $totalPrice = calculateTotalPrice($cartItems);
 
     // Call insertOrder to save the order in the database

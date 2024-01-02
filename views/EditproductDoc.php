@@ -9,6 +9,12 @@ class EditproductDoc extends ProductDoc
     echo "<h1>Edit Product</h1>";
   }
 
+  protected function showContent()
+  {
+    $editProductResult = $this->model->getData('editData');
+    $this->showForm($editProductResult);
+  }
+
   protected function getError($editProductResult, $key)
   {
     return isset($editProductResult['errors'][$key]) ? $editProductResult['errors'][$key] : '';

@@ -9,6 +9,12 @@ class AddproductDoc extends ProductDoc
     echo "<h1>Add Product</h1>";
   }
 
+  protected function showContent()
+  {
+    $addProductResult = $this->model->getData('addData');
+    $this->showForm($addProductResult);
+  }
+
   protected function getError($addProductResult, $key)
   {
     return isset($addProductResult['errors'][$key]) ? $addProductResult['errors'][$key] : '';
