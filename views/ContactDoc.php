@@ -10,7 +10,8 @@ class ContactDoc extends FormDoc
 
   protected function showContent()
   {
-    $formResult = $this->model->getData('formResult');
+    // $formResult = $this->model->getData('formResult');
+    $formResult = $this->model;
     $this->showForm($formResult);
 
   }

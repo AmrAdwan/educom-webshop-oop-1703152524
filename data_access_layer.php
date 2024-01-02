@@ -48,13 +48,11 @@ function findUserByEmail($email)
     mysqli_stmt_close($stmt);
 
     return $user;
-  } 
-  catch (Exception $e)
+  } catch (Exception $e)
   {
     logError("Could not find the user " . $e->getMessage());
     return null; // Explicitly return null if an exception occurs
-  }
-  finally 
+  } finally
   {
     mysqli_close($conn);
   }
@@ -141,6 +139,20 @@ function getAdminStatus($userId)
     return false; // User not found
   }
 }
+
+function updatePassword($email, $hashedPassword)
+{
+  $conn = connectToDatabase();
+
+  $updateSql = "UPDATE users SET password = ? WHERE email = ?";
+  $updateStmt = mysqli_prepare($conn, $updateSql);
+  mysqli_stmt_bind_param($updateStmt, "ss", $hashedPassword, $email);
+  $success = mysqli_stmt_execute($updateStmt);
+  mysqli_stmt_close($updateStmt);
+
+  return $success;
+}
+
 
 
 

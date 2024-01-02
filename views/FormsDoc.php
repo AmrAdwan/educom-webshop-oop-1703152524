@@ -22,7 +22,7 @@ abstract class FormDoc extends BasicDoc
     echo "<title>";
     // echo $this->data['page'];
     // echo ucfirst($this->data['page']);
-    echo ucfirst($this->model->getData('page'));
+    echo ($this->model->page);
     echo "</title>";
   }
 
@@ -111,33 +111,34 @@ abstract class FormDoc extends BasicDoc
 
   private function showMenu()
   {
-    $menuItems = [
-      'home' => 'Home',
-      'about' => 'About',
-      'contact' => 'Contact',
-      'webshop' => 'Webshop',
-      'top5' => 'Top 5'
-    ];
+    $this->model->showMenu();
+    // $menuItems = [
+    //   'home' => 'Home',
+    //   'about' => 'About',
+    //   'contact' => 'Contact',
+    //   'webshop' => 'Webshop',
+    //   'top5' => 'Top 5'
+    // ];
 
-    if ($this->model->getData('isLoggedIn'))
-    {
-      $menuItems['shoppingcart'] = 'ShoppingCart';
-      $menuItems['logout'] = 'Logout[' . $this->model->getData('userName') . ']';
-      $menuItems['change_password'] = 'Change Password';
-    } else
-    {
-      $menuItems['register'] = 'Register';
-      $menuItems['login'] = 'Login';
-    }
+    // if ($this->model->getData('isLoggedIn'))
+    // {
+    //   $menuItems['shoppingcart'] = 'ShoppingCart';
+    //   $menuItems['logout'] = 'Logout[' . $this->model->getData('userName') . ']';
+    //   $menuItems['change_password'] = 'Change Password';
+    // } else
+    // {
+    //   $menuItems['register'] = 'Register';
+    //   $menuItems['login'] = 'Login';
+    // }
 
-    echo '<nav>' . PHP_EOL;
-    echo '<ul class="menu">' . PHP_EOL;
-    foreach ($menuItems as $link => $label)
-    {
-      $this->showMenuItem($link, $label);
-    }
-    echo '</ul>' . PHP_EOL;
-    echo '</nav>' . PHP_EOL;
+    // echo '<nav>' . PHP_EOL;
+    // echo '<ul class="menu">' . PHP_EOL;
+    // foreach ($menuItems as $link => $label)
+    // {
+    //   $this->showMenuItem($link, $label);
+    // }
+    // echo '</ul>' . PHP_EOL;
+    // echo '</nav>' . PHP_EOL;
   }
 
 

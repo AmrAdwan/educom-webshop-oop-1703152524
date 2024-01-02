@@ -62,35 +62,6 @@ function validateLogin()
       $errors['logpassword'] = 'Please enter your password.';
     }
 
-    // if (empty($errors))
-    // {
-    //   try
-    //   {
-    //     // Use authenticateUser function from user_service.php 
-    //     $userResult = authenticateUser($loginData['logemail'], $loginData['logpassword']);
-    //     switch ($userResult["result"])
-    //     {
-    //       case RESULT_OK:
-    //         $_SESSION['user_name'] = ['logemail' => $loginData['logemail'], 'logname' => $userResult['name'], 'id' => $userResult['id']];
-    //         $name = $userResult['name'];
-    //         $id = $userResult['id'];
-
-    //         $logvalid = true;
-    //         break;
-    //       case RESULT_UNKNOWN_USER:
-    //         $errors['logemail'] = 'Email address not found. Please try again or register.';
-    //         break;
-    //       case RESULT_WRONG_PASSWORD:
-    //         $errors['logpassword'] = 'Incorrect password. Please try again.';
-    //         break;
-    //     }
-    //   } catch (Exception $e)
-    //   {
-    //     logError("Authentication failed: " . $e->getMessage());
-    //     $errorrs['generic'] = "there is a technical issue, please try later";
-    //   }
-    // }
-
     if (empty($errors))
     {
       try

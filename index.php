@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // include 'home.php';
 // include 'about.php';
 // include '404.php';
@@ -8,7 +10,7 @@
 // include 'thanks.php';
 // include 'change_password.php';
 include 'validations.php';
-include 'session_manager.php';
+// include 'session_manager.php';
 // include 'webshop.php';
 // include 'product_details.php';
 include 'shoppingcart.php';
@@ -31,7 +33,7 @@ include 'views/ShoppingcartDoc.php';
 include 'views/ProductdetailsDoc.php';
 include 'views/ChangePasswordDoc.php';
 include 'views/ErrorDoc.php';
-include 'controllers/PageController.php';
+require_once('controllers/PageController.php');
 
 
 
@@ -184,11 +186,11 @@ include 'controllers/PageController.php';
 //   return $data;
 // }
 
-function showHtmlstatement()
-{
-  echo "<!DOCTYPE html>\n";
-  "<html>";
-}
+// function showHtmlstatement()
+// {
+//   echo "<!DOCTYPE html>\n";
+//   "<html>";
+// }
 
 // function showHeadSection($data)
 // {
@@ -513,8 +515,8 @@ function showHtmlstatement()
 //   $doc->show();
 // }
 
-$model = new PageModel();
-$controller = new PageController($model);
+// $model = new PageModel();
+$controller = new PageController();
 $controller->handleRequest();
 // $page = getRequestedPage();
 // $data = processRequest($page);
