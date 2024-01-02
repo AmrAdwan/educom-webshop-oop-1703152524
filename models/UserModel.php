@@ -1,7 +1,7 @@
 <?php
 include_once "PageModel.php";
 include_once "user_service.php";
-require_once ("data_access_layer.php");
+require_once("data_access_layer.php");
 
 class UserModel extends PageModel
 {
@@ -43,80 +43,228 @@ class UserModel extends PageModel
   {
     echo "LOGGING TO THE SERVER LOG: " . $msg;
   }
+
   public function validateLogin()
   {
-    $loginData = [
-      'logemail' => '',
-      'logpassword' => '',
-    ];
-    $errors = [];
-    $name = $id = '';
+    $this->errors = [];
+    $this->name = $id = '';
 
-    // $logvalid = false;
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST')
+    // if ($_SERVER['REQUEST_METHOD'] === 'POST')
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['page']) && $_POST['page'] === 'login')
     {
-      foreach ($loginData as $key => $value)
-      {
-        $loginData[$key] = getPostVar($key);
-      }
+      // Get email and password from POST request and assign to class properties
+      $this->email = $this->getPostVar('logemail');
+      $this->password = $this->getPostVar('logpassword');
 
       // Check if email and password are not empty
-      if (empty($loginData['logemail']))
+      if (empty($this->email))
       {
-        $errors['logemail'] = 'Please enter your email.';
+        $this->errors['logemail'] = 'Please enter your email.';
       }
 
-      if (empty($loginData['logpassword']))
+      if (empty($this->password))
       {
-        $errors['logpassword'] = 'Please enter your password.';
+        $this->errors['logpassword'] = 'Please enter your password.';
       }
 
-      if (empty($errors))
+      if (empty($this->errors))
       {
         try
         {
-          // Use authenticateUser function from user_service.php 
-          $userResult = $this->authenticateUser($loginData['logemail'], $loginData['logpassword']);
+          // Use authenticateUser function
+          $userResult = $this->authenticateUser($this->email, $this->password);
           switch ($userResult["result"])
           {
             case self::RESULT_OK:
-              $user = $userResult["user"]; // Get the user array from the result
+              $user = $userResult["user"];
               $_SESSION['user_name'] = [
-                'logemail' => $loginData['logemail'],
-                'logname' => $user['name'], // Use the 'name' from the user array
-                'id' => $user['id'] // Use the 'id' from the user array
+                'logemail' => $this->email,
+                'logname' => $user['name'],
+                'id' => $user['id']
               ];
-              $name = $user['name'];
+              $this->name = $user['name'];
               $id = $user['id'];
-
-              // $logvalid = true;
               $this->valid = true;
               break;
             case self::RESULT_UNKNOWN_USER:
-              $errors['logemail'] = 'Email address not found. Please try again or register.';
+              $this->errors['logemail'] = 'Email address not found. Please try again or register.';
               break;
             case self::RESULT_WRONG_PASSWORD:
-              $errors['logpassword'] = 'Incorrect password. Please try again.';
+              $this->errors['logpassword'] = 'Incorrect password. Please try again.';
               break;
           }
         } catch (Exception $e)
         {
-          logError("Authentication failed: " . $e->getMessage());
-          $errors['generic'] = "There is a technical issue, please try later";
+          $this->logError("Authentication failed: " . $e->getMessage());
+          $this->errors['generic'] = "There is a technical issue, please try later";
+        }
+      }
+    }
+    return [
+      'logvalid' => $this->valid,
+      'loginData' => [
+        'logemail' => $this->email,
+        'logpassword' => $this->password
+      ],
+      'errors' => $this->errors
+    ];
+  }
+
+  public function validateRegister()
+  {
+    $this->errors = [];
+    $password2 = '';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST')
+    {
+      // Assign POST data directly to UserModel properties
+      $this->name = $this->getPostVar('regname');
+      $this->email = $this->getPostVar('regemail');
+      $this->password = $this->getPostVar('regpassword1');
+      $password2 = $this->getPostVar('regpassword2');
+
+      // Validation checks
+      if (empty($this->name))
+      {
+        $this->errors['regname'] = 'Insert a name.';
+      }
+
+      if (empty($this->email) || !filter_var($this->email, FILTER_VALIDATE_EMAIL))
+      {
+        $this->errors['regemail'] = 'Please insert a valid email.';
+      }
+
+      if (empty($this->password))
+      {
+        $this->errors['regpassword1'] = 'Please insert a password.';
+      }
+
+      if (empty($password2))
+      {
+        $this->errors['regpassword2'] = 'Please confirm the password.';
+      }
+
+      if ($this->password !== $password2)
+      {
+        $this->errors['regpassword2'] = 'The passwords do not match.';
+      }
+
+      if (empty($this->errors))
+      {
+        // Check if user email already exists
+        $this->valid = !$this->doesEmailExist($this->email);
+        if (!$this->valid)
+        {
+          $this->errors['regemail'] = "Email already exists!";
+        }
+      }
+    }
+
+    return [
+      'regvalid' => $this->valid,
+      'errors' => $this->errors,
+      'registerData' => [
+        'regname' => $this->name,
+        'regemail' => $this->email,
+        'regpassword1' => $this->password,
+        'regpassword2' => $password2
+      ]
+    ];
+  }
+
+  function validateContact()
+  {
+    $formData = [
+      'gender' => '',
+      'name' => '',
+      'email' => '',
+      'phone' => '',
+      'street' => '',
+      'housenumber' => '',
+      'addition' => '',
+      'zipcode' => '',
+      'city' => '',
+      'province' => '',
+      'country' => '',
+      'message' => '',
+      'contact' => ''
+    ];
+    $this->errors = [];
+
+    // $valid = false;
+
+    // check whether the form is sent
+    if ($_SERVER['REQUEST_METHOD'] === 'POST')
+    {
+      foreach ($formData as $key => $value)
+      {
+        $formData[$key] = $this->getPostVar($key);
+      }
+
+      if (empty($formData['gender']))
+      {
+        $this->errors['gender'] = 'Select your gender.';
+      }
+
+      if (empty($formData['name']))
+      {
+        $this->errors['name'] = 'Insert a name.';
+      }
+
+      if (empty($formData['message']))
+      {
+        $this->errors['message'] = 'Write your message.';
+      }
+
+      if (empty($formData['contact']))
+      {
+        $this->errors['contact'] = 'Choose your preferred contact method.';
+      } else
+      {
+        switch ($formData['contact'])
+        {
+          case 'email':
+            if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL) || empty($formData['email']))
+            {
+              $this->errors['email'] = 'Insert a valid e-mail address.';
+            }
+            break;
+          case 'phone':
+            if (empty($formData['phone']))
+            {
+              $this->errors['phone'] = 'Insert a phone number.';
+            }
+            break;
+          case 'post':
+            if (
+              empty($formData['street']) || empty($formData['housenumber']) ||
+              empty($formData['zipcode']) || empty($formData['city']) || empty($formData['province']) || empty($formData['country'])
+            )
+            {
+              $this->errors['street'] = 'Inster a street name.';
+              $this->errors['housenumber'] = 'Insert a house number.';
+              $this->errors['zipcode'] = 'Insert a zip code.';
+              $this->errors['city'] = 'Insert a city.';
+              $this->errors['province'] = 'Insert a province.';
+              $this->errors['country'] = 'Insert a country.';
+            }
+            break;
         }
       }
 
+      if (empty($this->errors))
+      {
+        $this->valid = true;
+      }
     }
     return [
-      // 'logvalid' => $logvalid,
-      'logvalid' => $this->valid,
-      'logname' => $name,
-      'id' => $id,
-      'errors' => $errors,
-      'loginData' => $loginData
+      'valid' => $this->valid,
+      'errors' => $this->errors,
+      'formData' => $formData
     ];
   }
+
+
 
   private function authenticateUser($email, $password)
   {
@@ -136,6 +284,13 @@ class UserModel extends PageModel
   {
     $this->sessionManager->doLoginUser($this->name, $this->userId);
     $this->genericMessage = "Login successful";
+  }
+
+  public function doLogoutUser()
+  {
+    $this->sessionManager->doLogoutUser($this->name, $this->userId);
+    $this->genericMessage = "Logout successful";
+    // session_destroy();
   }
 
   public function doesEmailExist($email)

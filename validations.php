@@ -2,173 +2,173 @@
 // Include the user_service.php file
 include 'user_service.php';
 
-function getPostVar($key, $default = '')
-{
-  if (isset($_POST[$key]))
-  {
-    return testInput($_POST[$key]);
-  }
-  return $default;
-}
+// function getPostVar($key, $default = '')
+// {
+//   if (isset($_POST[$key]))
+//   {
+//     return testInput($_POST[$key]);
+//   }
+//   return $default;
+// }
 
-function testInput($data)
-{
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
+// function testInput($data)
+// {
+//   $data = trim($data);
+//   $data = stripslashes($data);
+//   $data = htmlspecialchars($data);
+//   return $data;
+// }
 
-function getVar($key, $default = '')
-{
-  if (isset($_GET[$key]))
-  {
-    return testInput($_GET[$key]);
-  }
-  return $default;
-}
+// function getVar($key, $default = '')
+// {
+//   if (isset($_GET[$key]))
+//   {
+//     return testInput($_GET[$key]);
+//   }
+//   return $default;
+// }
 
 function logError($msg)
 {
   echo "LOGGING TO THE SERVER LOG: " . $msg;
 }
 
-function validateLogin()
-{
-  $loginData = [
-    'logemail' => '',
-    'logpassword' => '',
-  ];
-  $errors = [];
-  $name = $id = '';
+// function validateLogin()
+// {
+//   $loginData = [
+//     'logemail' => '',
+//     'logpassword' => '',
+//   ];
+//   $errors = [];
+//   $name = $id = '';
 
-  $logvalid = false;
+//   $logvalid = false;
 
-  if ($_SERVER['REQUEST_METHOD'] === 'POST')
-  {
-    foreach ($loginData as $key => $value)
-    {
-      $loginData[$key] = getPostVar($key);
-    }
+//   if ($_SERVER['REQUEST_METHOD'] === 'POST')
+//   {
+//     foreach ($loginData as $key => $value)
+//     {
+//       $loginData[$key] = getPostVar($key);
+//     }
 
-    // Check if email and password are not empty
-    if (empty($loginData['logemail']))
-    {
-      $errors['logemail'] = 'Please enter your email.';
-    }
+//     // Check if email and password are not empty
+//     if (empty($loginData['logemail']))
+//     {
+//       $errors['logemail'] = 'Please enter your email.';
+//     }
 
-    if (empty($loginData['logpassword']))
-    {
-      $errors['logpassword'] = 'Please enter your password.';
-    }
+//     if (empty($loginData['logpassword']))
+//     {
+//       $errors['logpassword'] = 'Please enter your password.';
+//     }
 
-    if (empty($errors))
-    {
-      try
-      {
-        // Use authenticateUser function from user_service.php 
-        $userResult = authenticateUser($loginData['logemail'], $loginData['logpassword']);
-        switch ($userResult["result"])
-        {
-          case RESULT_OK:
-            $user = $userResult["user"]; // Get the user array from the result
-            $_SESSION['user_name'] = [
-              'logemail' => $loginData['logemail'],
-              'logname' => $user['name'], // Use the 'name' from the user array
-              'id' => $user['id'] // Use the 'id' from the user array
-            ];
-            $name = $user['name'];
-            $id = $user['id'];
+//     if (empty($errors))
+//     {
+//       try
+//       {
+//         // Use authenticateUser function from user_service.php 
+//         $userResult = authenticateUser($loginData['logemail'], $loginData['logpassword']);
+//         switch ($userResult["result"])
+//         {
+//           case RESULT_OK:
+//             $user = $userResult["user"]; // Get the user array from the result
+//             $_SESSION['user_name'] = [
+//               'logemail' => $loginData['logemail'],
+//               'logname' => $user['name'], // Use the 'name' from the user array
+//               'id' => $user['id'] // Use the 'id' from the user array
+//             ];
+//             $name = $user['name'];
+//             $id = $user['id'];
 
-            $logvalid = true;
-            break;
-          case RESULT_UNKNOWN_USER:
-            $errors['logemail'] = 'Email address not found. Please try again or register.';
-            break;
-          case RESULT_WRONG_PASSWORD:
-            $errors['logpassword'] = 'Incorrect password. Please try again.';
-            break;
-        }
-      } catch (Exception $e)
-      {
-        logError("Authentication failed: " . $e->getMessage());
-        $errors['generic'] = "There is a technical issue, please try later";
-      }
-    }
+//             $logvalid = true;
+//             break;
+//           case RESULT_UNKNOWN_USER:
+//             $errors['logemail'] = 'Email address not found. Please try again or register.';
+//             break;
+//           case RESULT_WRONG_PASSWORD:
+//             $errors['logpassword'] = 'Incorrect password. Please try again.';
+//             break;
+//         }
+//       } catch (Exception $e)
+//       {
+//         logError("Authentication failed: " . $e->getMessage());
+//         $errors['generic'] = "There is a technical issue, please try later";
+//       }
+//     }
 
-  }
-  return [
-    'logvalid' => $logvalid,
-    'logname' => $name,
-    'id' => $id,
-    'errors' => $errors,
-    'loginData' => $loginData
-  ];
-}
+//   }
+//   return [
+//     'logvalid' => $logvalid,
+//     'logname' => $name,
+//     'id' => $id,
+//     'errors' => $errors,
+//     'loginData' => $loginData
+//   ];
+// }
 
-function validateRegister()
-{
-  $registerData = [
-    'regname' => '',
-    'regemail' => '',
-    'regpassword1' => '',
-    'regpassword2' => '',
-  ];
-  $errors = [];
+// function validateRegister()
+// {
+//   $registerData = [
+//     'regname' => '',
+//     'regemail' => '',
+//     'regpassword1' => '',
+//     'regpassword2' => '',
+//   ];
+//   $errors = [];
 
-  $regvalid = false;
+//   $regvalid = false;
 
-  if ($_SERVER['REQUEST_METHOD'] === 'POST')
-  {
-    foreach ($registerData as $key => $value)
-    {
-      $registerData[$key] = getPostVar($key);
-    }
+//   if ($_SERVER['REQUEST_METHOD'] === 'POST')
+//   {
+//     foreach ($registerData as $key => $value)
+//     {
+//       $registerData[$key] = getPostVar($key);
+//     }
 
-    // Validation checks
-    if (empty($registerData['regname']))
-    {
-      $errors['regname'] = 'Insert a name.';
-    }
+//     // Validation checks
+//     if (empty($registerData['regname']))
+//     {
+//       $errors['regname'] = 'Insert a name.';
+//     }
 
-    if (empty($registerData['regemail']) || !filter_var($registerData['regemail'], FILTER_VALIDATE_EMAIL))
-    {
-      $errors['regemail'] = 'Please insert a valid email';
-    }
+//     if (empty($registerData['regemail']) || !filter_var($registerData['regemail'], FILTER_VALIDATE_EMAIL))
+//     {
+//       $errors['regemail'] = 'Please insert a valid email';
+//     }
 
 
-    if (empty($registerData['regpassword1']))
-    {
-      $errors['regpassword1'] = 'Please insert a password';
-    }
-    if (empty($registerData['regpassword2']))
-    {
-      $errors['regpassword2'] = 'Please insert the password one more time';
-    }
-    if (isset($registerData['regpassword1']) && isset($registerData['regpassword2']))
-    {
-      if ($registerData['regpassword1'] != $registerData['regpassword2'])
-      {
-        $errors['regpassword2'] = 'The second password does not match the first password!';
-      }
-    }
+//     if (empty($registerData['regpassword1']))
+//     {
+//       $errors['regpassword1'] = 'Please insert a password';
+//     }
+//     if (empty($registerData['regpassword2']))
+//     {
+//       $errors['regpassword2'] = 'Please insert the password one more time';
+//     }
+//     if (isset($registerData['regpassword1']) && isset($registerData['regpassword2']))
+//     {
+//       if ($registerData['regpassword1'] != $registerData['regpassword2'])
+//       {
+//         $errors['regpassword2'] = 'The second password does not match the first password!';
+//       }
+//     }
 
-    if (empty($errors))
-    {
-      // check if user email already exists
-      $regvalid = !doesEmailExist($registerData['regemail']);
-      if (!$regvalid)
-      {
-        $errors['regemail'] = "Email already exists!";
-      }
-    }
-  }
-  return [
-    'regvalid' => $regvalid,
-    'errors' => $errors,
-    'registerData' => $registerData
-  ];
-}
+//     if (empty($errors))
+//     {
+//       // check if user email already exists
+//       $regvalid = !doesEmailExist($registerData['regemail']);
+//       if (!$regvalid)
+//       {
+//         $errors['regemail'] = "Email already exists!";
+//       }
+//     }
+//   }
+//   return [
+//     'regvalid' => $regvalid,
+//     'errors' => $errors,
+//     'registerData' => $registerData
+//   ];
+// }
 function validateContact()
 {
   $formData = [
@@ -195,7 +195,7 @@ function validateContact()
   {
     foreach ($formData as $key => $value)
     {
-      $formData[$key] = getPostVar($key);
+      $formData[$key] = $this->getPostVar($key);
     }
 
     if (empty($formData['gender']))

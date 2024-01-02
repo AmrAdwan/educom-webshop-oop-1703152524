@@ -10,7 +10,7 @@ class ThanksDoc extends BasicDoc
   protected function showContent()
   {
     // Assuming the form data is passed in the model
-    $formResult = $this->model->getData('contactFormData');
+    $formResult = $this->model->validateContact();
 
     // Check if formResult is available
     if (!empty($formResult))

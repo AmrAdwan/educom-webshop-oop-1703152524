@@ -10,7 +10,7 @@ class LoginDoc extends FormDoc
 
   protected function showContent()
   {
-    $loginResult = $this->model->getData('loginData');
+    $loginResult = $this->model->validateLogin();
     $this->showForm($loginResult);
   }
 

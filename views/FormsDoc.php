@@ -38,7 +38,6 @@ abstract class FormDoc extends BasicDoc
     echo "<div class=\"text\">";
     $this->showMenu();
     $this->showContent();
-    // $this->showForm();
     echo "</div>";
     $this->showFooter();
   }

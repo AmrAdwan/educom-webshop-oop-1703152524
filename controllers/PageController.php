@@ -17,12 +17,12 @@ class PageController
 
   public function handleRequest()
   {
-    $this->getRequeste();
+    $this->getRequest();
     $this->processRequest();
     $this->showResponsePage();
   }
 
-  private function getRequeste()
+  private function getRequest()
   {
     $this->model->getRequestedPage();
   }
@@ -88,32 +88,25 @@ class PageController
     //   $this->model->setPage($page);
     // }
 
-    // Handle specific page logic
     switch ($this->model->page)
     {
       case 'login':
         $this->model = new UserModel($this->model);
         $this->model->validateLogin();
+        // var_dump($this->model);
         if ($this->model->valid)
         {
           $this->model->doLoginUser();
           $this->model->setPage("home");
+        } 
+        break;
+      case 'contact':
+        $this->model = new UserModel($this->model);
+        $this->model->validateContact();
+        if ($this->model->valid)
+        {
+          $this->model->setPage("thanks");
         }
-
-
-        // $data = validateLogin();
-        // $this->model->setData('loginData', $data);
-        // if ($data['logvalid'])
-        // {
-        //   doLoginUser($data['id'], $data['logname']);
-        //   $this->model->setData('isLoggedIn', true);
-        //   $this->model->setData('userName', getLoggedInUserName());
-        //   $this->model->setData('page', 'home');
-        // } else
-        // {
-        //   // Stay on login page with errors
-        //   $this->model->setData('page', 'login');
-        // }
         break;
       // case 'contact':
       //   $data = validateContact();
@@ -124,7 +117,24 @@ class PageController
       //     $this->model->setData('page', 'thanks');
       //   }
       //   break;
-      // case 'register':
+      case 'register':
+        $this->model = new UserModel($this->model);
+        $user = $this->model->validateRegister();
+        // var_dump($user["registerData"]["regpassword1"]);
+        if ($this->model->valid)
+        {
+          $this->model->email = $user["registerData"]["regemail"];
+          $this->model->name = $user["registerData"]["regname"];
+          $this->model->password = $user["registerData"]["regpassword1"];
+          saveUser($this->model->email, $this->model->name, $this->model->password);
+          $this->model->valid = false;
+          $this->model->setPage("login");
+        }
+        break;
+        //  else
+        // {
+        //   $this->model->setPage("register");
+        // }
       //   $data = validateRegister();
       //   $this->model->setData('registerData', $data);
       //   if ($data['regvalid'])
@@ -139,13 +149,14 @@ class PageController
       //     // Stay on register page with errors
       //     $this->model->setData('page', 'register');
       //   }
-      //   break;
-      // case 'logout':
-      //   doLogoutUser();
-      //   $this->model->setData('isLoggedIn', false);
-      //   $this->model->setData('userName', null);
-      //   $this->model->setData('page', 'home');
-      //   break;
+      case 'logout':
+        $this->model = new UserModel($this->model);
+        $this->model->doLogoutUser();
+        $this->model->setPage("home");
+        // $this->model->setData('isLoggedIn', false);
+        // $this->model->setData('userName', null);
+        // $this->model->setData('page', 'home');
+        break;
       // case 'change_password':
       //   $data = validateChangePassword();
       //   $this->model->setData('changeData', $data);

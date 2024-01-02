@@ -9,7 +9,8 @@ class RegisterDoc extends FormDoc
 
   protected function showContent()
   {
-    $registerResult = $this->model->getData('registerData');
+    // $registerResult = $this->model->getData('registerData');
+    $registerResult = $this->model->validateRegister();
     $this->showForm($registerResult);
   }
 
