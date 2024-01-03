@@ -108,15 +108,6 @@ class PageController
           $this->model->setPage("thanks");
         }
         break;
-      // case 'contact':
-      //   $data = validateContact();
-      //   $this->model->setData('formResult', $data);
-      //   if ($data['valid'])
-      //   {
-      //     $this->model->setData('contactFormData', $data);
-      //     $this->model->setData('page', 'thanks');
-      //   }
-      //   break;
       case 'register':
         $this->model = new UserModel($this->model);
         $user = $this->model->validateRegister();
@@ -131,51 +122,27 @@ class PageController
           $this->model->setPage("login");
         }
         break;
-        //  else
-        // {
-        //   $this->model->setPage("register");
-        // }
-      //   $data = validateRegister();
-      //   $this->model->setData('registerData', $data);
-      //   if ($data['regvalid'])
-      //   {
-      //     $registerData = $data['registerData'];
-      //     // Save the user to the database
-      //     saveUser($registerData['regemail'], $registerData['regname'], $registerData['regpassword1']);
-      //     // Redirect to the login page after successful registration
-      //     $this->model->setData('page', 'login');
-      //   } else
-      //   {
-      //     // Stay on register page with errors
-      //     $this->model->setData('page', 'register');
-      //   }
       case 'logout':
         $this->model = new UserModel($this->model);
         $this->model->doLogoutUser();
         $this->model->setPage("home");
-        // $this->model->setData('isLoggedIn', false);
-        // $this->model->setData('userName', null);
-        // $this->model->setData('page', 'home');
         break;
-      // case 'change_password':
-      //   $data = validateChangePassword();
-      //   $this->model->setData('changeData', $data);
-
-      //   if ($data['changevalid'])
-      //   {
-      //     $id = $_SESSION['user_id'];
-      //     $email = findEmailById($id);
-      //     if (isset($data['changeData']['new_password']))
-      //     {
-      //       $hashedPassword = password_hash($data['changeData']['new_password'], PASSWORD_DEFAULT);
-      //       updateUserPassword($email, $hashedPassword);
-      //     }
-      //     $this->model->setData('page', 'home');
-      //   } else
-      //   {
-      //     $this->model->setData('page', 'change_password');
-      //   }
-      //   break;
+      case 'change_password':
+        $this->model = new UserModel($this->model);
+        $this->model->validateChangePassword();
+        if ($this->model->valid)
+        {
+          $id = $_SESSION['user_id'];
+          $email = findEmailById($id);
+          var_dump($email);
+          if (isset($this->model->newPassword))
+          {
+            $hashedPassword = password_hash($this->model->newPassword, PASSWORD_DEFAULT);
+            updatePassword($email, $hashedPassword);
+          }
+          $this->model->setPage("home");
+        }
+        break;
       // case 'product_details':
       //   if (isset($_GET['product_id']))
       //   {

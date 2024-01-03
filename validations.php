@@ -169,97 +169,97 @@ function logError($msg)
 //     'registerData' => $registerData
 //   ];
 // }
-function validateContact()
-{
-  $formData = [
-    'gender' => '',
-    'name' => '',
-    'email' => '',
-    'phone' => '',
-    'street' => '',
-    'housenumber' => '',
-    'addition' => '',
-    'zipcode' => '',
-    'city' => '',
-    'province' => '',
-    'country' => '',
-    'message' => '',
-    'contact' => ''
-  ];
-  $errors = [];
+// function validateContact()
+// {
+//   $formData = [
+//     'gender' => '',
+//     'name' => '',
+//     'email' => '',
+//     'phone' => '',
+//     'street' => '',
+//     'housenumber' => '',
+//     'addition' => '',
+//     'zipcode' => '',
+//     'city' => '',
+//     'province' => '',
+//     'country' => '',
+//     'message' => '',
+//     'contact' => ''
+//   ];
+//   $errors = [];
 
-  $valid = false;
+//   $valid = false;
 
-  // check whether the form is sent
-  if ($_SERVER['REQUEST_METHOD'] === 'POST')
-  {
-    foreach ($formData as $key => $value)
-    {
-      $formData[$key] = $this->getPostVar($key);
-    }
+//   // check whether the form is sent
+//   if ($_SERVER['REQUEST_METHOD'] === 'POST')
+//   {
+//     foreach ($formData as $key => $value)
+//     {
+//       $formData[$key] = $this->getPostVar($key);
+//     }
 
-    if (empty($formData['gender']))
-    {
-      $errors['gender'] = 'Select your gender.';
-    }
+//     if (empty($formData['gender']))
+//     {
+//       $errors['gender'] = 'Select your gender.';
+//     }
 
-    if (empty($formData['name']))
-    {
-      $errors['name'] = 'Insert a name.';
-    }
+//     if (empty($formData['name']))
+//     {
+//       $errors['name'] = 'Insert a name.';
+//     }
 
-    if (empty($formData['message']))
-    {
-      $errors['message'] = 'Write your message.';
-    }
+//     if (empty($formData['message']))
+//     {
+//       $errors['message'] = 'Write your message.';
+//     }
 
-    if (empty($formData['contact']))
-    {
-      $errors['contact'] = 'Choose your preferred contact method.';
-    } else
-    {
-      switch ($formData['contact'])
-      {
-        case 'email':
-          if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL) || empty($formData['email']))
-          {
-            $errors['email'] = 'Insert a valid e-mail address.';
-          }
-          break;
-        case 'phone':
-          if (empty($formData['phone']))
-          {
-            $errors['phone'] = 'Insert a phone number.';
-          }
-          break;
-        case 'post':
-          if (
-            empty($formData['street']) || empty($formData['housenumber']) ||
-            empty($formData['zipcode']) || empty($formData['city']) || empty($formData['province']) || empty($formData['country'])
-          )
-          {
-            $errors['street'] = 'Inster a street name.';
-            $errors['housenumber'] = 'Insert a house number.';
-            $errors['zipcode'] = 'Insert a zip code.';
-            $errors['city'] = 'Insert a city.';
-            $errors['province'] = 'Insert a province.';
-            $errors['country'] = 'Insert a country.';
-          }
-          break;
-      }
-    }
+//     if (empty($formData['contact']))
+//     {
+//       $errors['contact'] = 'Choose your preferred contact method.';
+//     } else
+//     {
+//       switch ($formData['contact'])
+//       {
+//         case 'email':
+//           if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL) || empty($formData['email']))
+//           {
+//             $errors['email'] = 'Insert a valid e-mail address.';
+//           }
+//           break;
+//         case 'phone':
+//           if (empty($formData['phone']))
+//           {
+//             $errors['phone'] = 'Insert a phone number.';
+//           }
+//           break;
+//         case 'post':
+//           if (
+//             empty($formData['street']) || empty($formData['housenumber']) ||
+//             empty($formData['zipcode']) || empty($formData['city']) || empty($formData['province']) || empty($formData['country'])
+//           )
+//           {
+//             $errors['street'] = 'Inster a street name.';
+//             $errors['housenumber'] = 'Insert a house number.';
+//             $errors['zipcode'] = 'Insert a zip code.';
+//             $errors['city'] = 'Insert a city.';
+//             $errors['province'] = 'Insert a province.';
+//             $errors['country'] = 'Insert a country.';
+//           }
+//           break;
+//       }
+//     }
 
-    if (empty($errors))
-    {
-      $valid = true;
-    }
-  }
-  return [
-    'valid' => $valid,
-    'errors' => $errors,
-    'formData' => $formData
-  ];
-}
+//     if (empty($errors))
+//     {
+//       $valid = true;
+//     }
+//   }
+//   return [
+//     'valid' => $valid,
+//     'errors' => $errors,
+//     'formData' => $formData
+//   ];
+// }
 
 function validateChangePassword()
 {

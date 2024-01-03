@@ -1,6 +1,7 @@
 <?php
 include_once "PageModel.php";
 include_once "user_service.php";
+require_once("SessionManager.php");
 require_once("data_access_layer.php");
 
 class UserModel extends PageModel
@@ -8,6 +9,9 @@ class UserModel extends PageModel
   public $name = '';
   public $email = '';
   public $password = '';
+  public $oldPassword = '';
+  public $newPassword = '';
+  public $confirmNewPassword = '';
   public $emailErr = '';
   private $userId = 0;
   public $valid = false;
@@ -47,7 +51,7 @@ class UserModel extends PageModel
   public function validateLogin()
   {
     $this->errors = [];
-    $this->name = $id = '';
+    $this->name = $this->userId = '';
 
     // if ($_SERVER['REQUEST_METHOD'] === 'POST')
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['page']) && $_POST['page'] === 'login')
@@ -83,7 +87,7 @@ class UserModel extends PageModel
                 'id' => $user['id']
               ];
               $this->name = $user['name'];
-              $id = $user['id'];
+              $this->userId = $user['id'];
               $this->valid = true;
               break;
             case self::RESULT_UNKNOWN_USER:
@@ -104,16 +108,16 @@ class UserModel extends PageModel
       'logvalid' => $this->valid,
       'loginData' => [
         'logemail' => $this->email,
-        'logpassword' => $this->password
+        'logpassword' => $this->password       
       ],
-      'errors' => $this->errors
+      'errors' => $this->errors,
+      'userid' => $this->userId 
     ];
   }
 
   public function validateRegister()
   {
     $this->errors = [];
-    $password2 = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST')
     {
@@ -121,7 +125,7 @@ class UserModel extends PageModel
       $this->name = $this->getPostVar('regname');
       $this->email = $this->getPostVar('regemail');
       $this->password = $this->getPostVar('regpassword1');
-      $password2 = $this->getPostVar('regpassword2');
+      $this->confirmNewPassword = $this->getPostVar('regpassword2');
 
       // Validation checks
       if (empty($this->name))
@@ -139,12 +143,12 @@ class UserModel extends PageModel
         $this->errors['regpassword1'] = 'Please insert a password.';
       }
 
-      if (empty($password2))
+      if (empty($this->confirmNewPassword))
       {
         $this->errors['regpassword2'] = 'Please confirm the password.';
       }
 
-      if ($this->password !== $password2)
+      if ($this->password !== $this->confirmNewPassword)
       {
         $this->errors['regpassword2'] = 'The passwords do not match.';
       }
@@ -167,7 +171,7 @@ class UserModel extends PageModel
         'regname' => $this->name,
         'regemail' => $this->email,
         'regpassword1' => $this->password,
-        'regpassword2' => $password2
+        'regpassword2' => $this->confirmNewPassword
       ]
     ];
   }
@@ -265,6 +269,59 @@ class UserModel extends PageModel
   }
 
 
+  public function validateChangePassword()
+  {
+    $this->errors = [];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST')
+    {
+      $this->oldPassword = $this->getPostVar('old_password');
+      $this->newPassword = $this->getPostVar('new_password');
+      $this->confirmNewPassword = $this->getPostVar('confirm_new_password');
+
+      // Validation checks
+      if (empty($this->oldPassword))
+      {
+        $this->errors['old_password'] = 'Please enter your old password.';
+      }
+
+      if (empty($this->newPassword))
+      {
+        $this->errors['new_password'] = 'Please enter a new password.';
+      } elseif ($this->newPassword === $this->oldPassword)
+      {
+        $this->errors['new_password'] = 'New password cannot be the same as the old password.';
+      }
+
+      if ($this->newPassword !== $this->confirmNewPassword)
+      {
+        $this->errors['confirm_new_password'] = 'Passwords do not match.';
+      }
+
+      // Check if the old password is correct
+      if (empty($this->errors))
+      {
+        $id = $_SESSION['user_id'];
+        $this->email = findEmailById($id);
+        $user = findUserByEmail($this->email);
+
+        if ($user && password_verify($this->oldPassword, $user['password']))
+        {
+          $this->valid = true;
+        } else
+        {
+          $this->errors['old_password'] = 'Incorrect old password.';
+        }
+      }
+    }
+
+    return [
+      'changeValid' => $this->valid,
+      'errors' => $this->errors,
+    ];
+  }
+
+
 
   private function authenticateUser($email, $password)
   {
@@ -282,13 +339,13 @@ class UserModel extends PageModel
 
   public function doLoginUser()
   {
-    $this->sessionManager->doLoginUser($this->name, $this->userId);
+    $this->sessionManager->doLoginUser($this->userId, $this->name);
     $this->genericMessage = "Login successful";
   }
 
   public function doLogoutUser()
   {
-    $this->sessionManager->doLogoutUser($this->name, $this->userId);
+    $this->sessionManager->doLogoutUser();
     $this->genericMessage = "Logout successful";
     // session_destroy();
   }
@@ -299,13 +356,18 @@ class UserModel extends PageModel
     return $user !== null; // Returns true if user exists, false otherwise
   }
 
-  // public function updateUserPassword($email, $hashedPassword)
+  public function updatePassword($email, $hashedPassword)
+  {
+    return updatePassword($email, $hashedPassword);
+  }
+
+
+  // Update user password
+  // public function updateUserPassword($email, $newPassword)
   // {
-  //   return updatePassword($email, $hashedPassword);
+  //   $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+  //   return $this->updateUserPassword($email, $hashedPassword);
   // }
-
-
-
 
 
   // public function setUserData($userId, $name, $email)
@@ -346,11 +408,5 @@ class UserModel extends PageModel
   //   return doesEmailExist($email);
   // }
 
-  // // Update user password
-  // public function updateUserPassword($email, $newPassword)
-  // {
-  //   $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-  //   return updateUserPassword($email, $hashedPassword);
-  // }
 }
 ?>

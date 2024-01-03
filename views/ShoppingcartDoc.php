@@ -9,7 +9,8 @@ class ShoppingcartDoc extends BasicDoc
   }
   protected function showContent()
   {
-    $cartItems = $this->getCartItems();
+    // $cartItems = $this->getCartItems();
+
     $totalPrice = 0;
 
     echo "<h2>Shopping Cart</h2>";
@@ -104,96 +105,95 @@ class ShoppingcartDoc extends BasicDoc
 
 
 
-  public function addToCart($productId)
-  {
-    if (!isset($_SESSION['cart']))
-    {
-      $_SESSION['cart'] = [];
-    }
+  // public function addToCart($productId)
+  // {
+  //   if (!isset($_SESSION['cart']))
+  //   {
+  //     $_SESSION['cart'] = [];
+  //   }
 
-    // Check if the product is already in the cart
-    if (isset($_SESSION['cart'][$productId]))
-    {
-      $_SESSION['cart'][$productId]++; // Increase quantity
-    } else
-    {
-      $_SESSION['cart'][$productId] = 1; // Add product with quantity 1
-    }
-  }
-
-
-  public function getCartItems()
-  {
-    if (!isset($_SESSION['cart']))
-    {
-      return [];
-    }
-
-    $cartItems = [];
-    foreach ($_SESSION['cart'] as $productId => $quantity)
-    {
-      $product = getProductById($productId);
-      if ($product)
-      {
-        $product['quantity'] = $quantity;
-        $product['subtotal'] = $quantity * $product['price'];
-        $cartItems[] = $product;
-      }
-    }
-    return $cartItems;
-  }
-
-  protected function updateCartQuantity($productId, $quantity)
-  {
-    if (isset($_SESSION['cart'][$productId]))
-    {
-      if ($quantity > 0)
-      {
-        $_SESSION['cart'][$productId] = $quantity;
-      } else
-      {
-        unset($_SESSION['cart'][$productId]); // Remove item if quantity is 0
-      }
-    }
-  }
-
-  protected function removeFromCart($productId)
-  {
-    if (isset($_SESSION['cart'][$productId]))
-    {
-      unset($_SESSION['cart'][$productId]);
-    }
-  }
-
-  protected function calculateTotalPrice($cartItems)
-  {
-    $totalPrice = 0;
-
-    foreach ($cartItems as $item)
-    {
-      $totalPrice += $item['price'] * $item['quantity'];
-    }
-
-    return $totalPrice;
-  }
+  //   // Check if the product is already in the cart
+  //   if (isset($_SESSION['cart'][$productId]))
+  //   {
+  //     $_SESSION['cart'][$productId]++; // Increase quantity
+  //   } else
+  //   {
+  //     $_SESSION['cart'][$productId] = 1; // Add product with quantity 1
+  //   }
+  // }
 
 
-  protected function processCheckout()
-  {
-    $userId = $_SESSION['user_id'];
-    $cartItems = $this->getCartItems();
-    // $totalPrice = calculateTotalPrice($cartItems);
+  // public function getCartItems()
+  // {
+  //   if (!isset($_SESSION['cart']))
+  //   {
+  //     return [];
+  //   }
 
-    // Call insertOrder to save the order in the database
-    $orderPlaced = insertOrder($userId, $cartItems);
+  //   $cartItems = [];
+  //   foreach ($_SESSION['cart'] as $productId => $quantity)
+  //   {
+  //     $product = getProductById($productId);
+  //     if ($product)
+  //     {
+  //       $product['quantity'] = $quantity;
+  //       $product['subtotal'] = $quantity * $product['price'];
+  //       $cartItems[] = $product;
+  //     }
+  //   }
+  //   return $cartItems;
+  // }
 
-    if ($orderPlaced)
-    {
-      // echo "<script>alert('Hello!');</script>";
-      echo '<script language="javascript">alert("Order Placed Successfully! Thank you for your order!");</script>';
-      $_SESSION['cart'] = []; // Empty the cart
-    }
-  }
+  // protected function updateCartQuantity($productId, $quantity)
+  // {
+  //   if (isset($_SESSION['cart'][$productId]))
+  //   {
+  //     if ($quantity > 0)
+  //     {
+  //       $_SESSION['cart'][$productId] = $quantity;
+  //     } else
+  //     {
+  //       unset($_SESSION['cart'][$productId]); // Remove item if quantity is 0
+  //     }
+  //   }
+  // }
+
+  // protected function removeFromCart($productId)
+  // {
+  //   if (isset($_SESSION['cart'][$productId]))
+  //   {
+  //     unset($_SESSION['cart'][$productId]);
+  //   }
+  // }
+
+  // protected function calculateTotalPrice($cartItems)
+  // {
+  //   $totalPrice = 0;
+
+  //   foreach ($cartItems as $item)
+  //   {
+  //     $totalPrice += $item['price'] * $item['quantity'];
+  //   }
+
+  //   return $totalPrice;
+  // }
+
+
+  // protected function processCheckout()
+  // {
+  //   $userId = $_SESSION['user_id'];
+  //   $cartItems = $this->getCartItems();
+
+  //   // Call insertOrder to save the order in the database
+  //   $orderPlaced = insertOrder($userId, $cartItems);
+
+  //   if ($orderPlaced)
+  //   {
+  //     // echo "<script>alert('Hello!');</script>";
+  //     echo '<script language="javascript">alert("Order Placed Successfully! Thank you for your order!");</script>';
+  //     $_SESSION['cart'] = []; // Empty the cart
+  //   }
+  // }
 }
 
 ?>

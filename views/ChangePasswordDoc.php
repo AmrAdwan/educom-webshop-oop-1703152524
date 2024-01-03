@@ -10,7 +10,8 @@ class ChangePasswordDoc extends FormDoc
 
   protected function showContent()
   {
-    $changeResult = $this->model->getData('changeData');
+    // $changeResult = $this->model->getData('changeData');
+    $changeResult = $this->model->validateChangePassword();
     $this->showForm($changeResult);
 
   }

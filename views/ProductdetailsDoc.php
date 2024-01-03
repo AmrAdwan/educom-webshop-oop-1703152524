@@ -12,7 +12,8 @@ class ProductdetailsDoc extends BasicDoc
   protected function showContent()
   {
     // Retrieve product data from the model
-    $product = $this->model->getData('product');
+    // $product = $this->model->getData('product');
+    $product = $this->model->product;
 
     if ($product)
     {
