@@ -9,7 +9,9 @@ class ShoppingcartDoc extends BasicDoc
   }
   protected function showContent()
   {
-    // $cartItems = $this->getCartItems();
+    // Fetch cart items from the model
+    $cartItems = $this->model->getCartLines();
+
 
     $totalPrice = 0;
 
@@ -35,7 +37,8 @@ class ShoppingcartDoc extends BasicDoc
 
       // Form for updating quantity with plus and minus buttons
       echo "<form onsubmit='handleSubmit(this); return false;' method='post'>";
-      echo "<input type='hidden' name='page' value='update_cart'>";
+      echo "<input type='hidden' name='page' value='shoppingcart'>";
+      echo "<input type='hidden' name='action' value='update'>";
       echo "<input type='hidden' name='product_id' value='" . $item['id'] . "'>";
 
       // Minus button
@@ -53,7 +56,8 @@ class ShoppingcartDoc extends BasicDoc
 
       // Button for removing item
       echo "<form onsubmit='handleSubmit(this); return false;' method='post'>";
-      echo "<input type='hidden' name='page' value='remove_from_cart'>";
+      echo "<input type='hidden' name='page' value='shoppingcart'>";
+      echo "<input type='hidden' name='action' value='remove'>";
       echo "<input type='hidden' name='product_id' value='" . $item['id'] . "'>";
       echo "<button style=\"font-size:24px; color:red\" color><i class=\"material-icons\">delete</i></button>";
       echo "</form>";
@@ -65,7 +69,8 @@ class ShoppingcartDoc extends BasicDoc
       $totalPrice += $item['subtotal'];
     }
     echo "<form action='index.php' method='post'>";
-    echo "<input type='hidden' name='page' value='checkout'>";
+    echo "<input type='hidden' name='page' value='shoppingcart'>";
+    echo "<input type='hidden' name='action' value='checkout'>";
     echo "<button style=\"font-size:24px\"><i class=\"fa fa-shopping-cart\"></i></button>";
     echo "</form>";
 

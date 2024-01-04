@@ -49,36 +49,8 @@ class PageModel
 
   protected function setPage($newPage)
   {
-    // $allowedPages = [
-    //   'home',
-    //   'about',
-    //   'contact',
-    //   'register',
-    //   'login',
-    //   'logout',
-    //   'change_password',
-    //   'thanks',
-    //   'webshop',
-    //   'product_details',
-    //   'shoppingcart',
-    //   'top5',
-    //   'add_product',
-    //   'edit_product'
-    // ];
-    // if (in_array($newPage, $allowedPages))
-    // {
-      $this->page = $newPage;
-    // }
+    $this->page = $newPage;
   }
-
-  // public function getPostVar($key, $default = null)
-  // {
-  //   return isset($_POST[$key]) ? $_POST[$key] : $default;
-  // }
-  // public function getUrlVar($key, $default = "")
-  // {
-  //   return isset($_GET[$key]) ? $_GET[$key] : $default;
-  // }
 
   public function getPostVar($key, $default = '')
   {
@@ -138,31 +110,5 @@ class PageModel
     echo '</ul>' . PHP_EOL;
     echo '</nav>' . PHP_EOL;
   }
-
-
-
-  // public function createMenu()
-  // {
-  //   $this->menu['home'] = new MenuItem('home', 'Home');
-
-  //   if ($this->sessionManager->isUserLoggedIn())
-  //   {
-  //     $this->menu['logout'] = new MenuItem(
-  //       'logout',
-  //       'LOGOUT',
-  //       $this->sessionManager->getLoggedInUserName()['name']
-  //     );
-  //   }
-  // }
-
-  // public function setData($key, $value)
-  // {
-  //   $this->data[$key] = $value;
-  // }
-
-  // public function getData($key)
-  // {
-  //   return isset($this->data[$key]) ? $this->data[$key] : null;
-  // }
 }
 ?>

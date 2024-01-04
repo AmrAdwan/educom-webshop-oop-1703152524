@@ -108,10 +108,10 @@ class UserModel extends PageModel
       'logvalid' => $this->valid,
       'loginData' => [
         'logemail' => $this->email,
-        'logpassword' => $this->password       
+        'logpassword' => $this->password
       ],
       'errors' => $this->errors,
-      'userid' => $this->userId 
+      'userid' => $this->userId
     ];
   }
 

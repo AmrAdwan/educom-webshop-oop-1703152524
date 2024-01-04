@@ -13,6 +13,9 @@ class ProductdetailsDoc extends BasicDoc
   {
     // Retrieve product data from the model
     // $product = $this->model->getData('product');
+    // $product = $this->model->product;
+    $productId = $_GET['product_id'];
+    $this->model->product = $this->model->getDetailsData($productId);
     $product = $this->model->product;
 
     if ($product)
@@ -25,17 +28,18 @@ class ProductdetailsDoc extends BasicDoc
       echo "<h3>Description: " . htmlspecialchars($product['description']) . "</h3>";
       echo "</div>";
 
-      if (isUserLoggedIn())
+      if ($this->model->isUserLoggedIn())
       {
         // Add to Cart Form
         echo "<form action='index.php' method='post' onsubmit='redirectToCart()'>";
         echo "<input type='hidden' name='page' value='shoppingcart'>";
+        echo "<input type='hidden' name='action' value='add'>";
         echo "<input type='hidden' name='product_id' value='" . $product['id'] . "'>";
         echo "<button style=\"font-size:16px\"><i class=\"fa fa-shopping-cart\"> Add to Cart</i></button>";
         echo "</form>";
 
         // Edit Product Button
-        if (isUserAdmin())
+        if ($this->model->isUserAdmin())
         {
           echo "<input type='hidden' name='product_id' value='" . $product['id'] . "'>";
           echo "<a href='index.php?page=edit_product&product_id=" . $product['id'] .

@@ -26,68 +26,50 @@ class PageController
   {
     $this->model->getRequestedPage();
   }
-    // A list of allowed pages
-    // $allowedPages = [
-    //   'home',
-    //   'about',
-    //   'contact',
-    //   'register',
-    //   'login',
-    //   'logout',
-    //   'change_password',
-    //   'thanks',
-    //   'webshop',
-    //   'product_details',
-    //   'shoppingcart',
-    //   'top5',
-    //   'add_product',
-    //   'edit_product'
-    // ];
+  // A list of allowed pages
+  // $allowedPages = [
+  //   'home',
+  //   'about',
+  //   'contact',
+  //   'register',
+  //   'login',
+  //   'logout',
+  //   'change_password',
+  //   'thanks',
+  //   'webshop',
+  //   'product_details',
+  //   'shoppingcart',
+  //   'top5',
+  //   'add_product',
+  //   'edit_product'
+  // ];
 
-    // // Check if it's a POST request
-    // if ($_SERVER['REQUEST_METHOD'] === 'POST')
-    // {
-    //   // Check the page field to determine which form was submitted
-    //   if (isset($_POST['page']))
-    //   {
-    //     return $_POST['page'];
-    //   }
-    // }
+  // // Check if it's a POST request
+  // if ($_SERVER['REQUEST_METHOD'] === 'POST')
+  // {
+  //   // Check the page field to determine which form was submitted
+  //   if (isset($_POST['page']))
+  //   {
+  //     return $_POST['page'];
+  //   }
+  // }
 
-    // // Retrieving the 'page' parameter from the GET request
-    // $requestedPage = $_GET['page'] ?? null;
+  // // Retrieving the 'page' parameter from the GET request
+  // $requestedPage = $_GET['page'] ?? null;
 
-    // // Check whether the requested page is in the list of allowed pages
-    // if (in_array($requestedPage, $allowedPages))
-    // {
-    //   return $requestedPage;
-    // }
+  // // Check whether the requested page is in the list of allowed pages
+  // if (in_array($requestedPage, $allowedPages))
+  // {
+  //   return $requestedPage;
+  // }
 
-    // // Return '404' for any other cases
-    // return '404';
+  // // Return '404' for any other cases
+  // return '404';
   // }
 
   // business flow code
   private function processRequest()
   {
-    // $page = $this->getRequestedPage();
-
-
-    // if (in_array($page, ['webshop', 'product_details', 'shoppingcart', 'top5', 'add_product', 'edit_product']))
-    // {
-    //   $shopModel = new WebshopModel();
-    //   $shopModel->setPage($page);
-    //   $this->model = $shopModel;
-    // } elseif (in_array($page, ['login', 'contact', 'register', 'logout', 'change_password']))
-    // {
-    //   $userModel = new UserModel();
-    //   $userModel->setPage($page);
-    //   $this->model = $userModel;
-    // } else
-    // {
-    //   $this->model->setPage($page);
-    // }
-
     switch ($this->model->page)
     {
       case 'login':
@@ -98,7 +80,7 @@ class PageController
         {
           $this->model->doLoginUser();
           $this->model->setPage("home");
-        } 
+        }
         break;
       case 'contact':
         $this->model = new UserModel($this->model);
@@ -143,47 +125,29 @@ class PageController
           $this->model->setPage("home");
         }
         break;
-      // case 'product_details':
-      //   if (isset($_GET['product_id']))
-      //   {
-      //     $productId = $_GET['product_id'];
-      //     $product = getProductById($productId);
-      //     if ($product)
-      //     {
-      //       $this->model->setData('product', $product);
-      //       $this->model->setData('page', 'product_details');
-      //     }
-      //   }
-      //   break;
-      // case 'shoppingcart':
-      //   if (isset($_POST['product_id']))
-      //   {
-      //     $productId = $_POST['product_id'];
-      //     addToCart($productId);
-      //   }
-      //   $cartItems = getCartItems();
-      //   $this->model->setData('cart', $cartItems);
-      //   $this->model->setData('page', 'shoppingcart');
-      //   break;
-      // case 'update_cart':
-      //   if (isset($_POST['product_id']) && isset($_POST['quantity']))
-      //   {
-      //     updateCartQuantity($_POST['product_id'], $_POST['quantity']);
-      //   }
-      //   break;
-      // case 'remove_from_cart':
-      //   if (isset($_POST['product_id']))
-      //   {
-      //     removeFromCart($_POST['product_id']);
-      //   }
-      //   break;
-      // case 'checkout':
-      //   if (!empty($_SESSION['cart']))
-      //   {
-      //     processCheckout();
-      //     $this->model->setData('page', 'webshop');
-      //   }
-      //   break;
+      case 'webshop':
+        $this->model = new WebshopModel($this->model);
+        $this->model->setPage("webshop");
+        break;
+      case 'product_details':
+        $this->model = new WebshopModel($this->model);
+        if (isset($_GET['product_id']))
+        {
+          $productId = $_GET['product_id'];
+          $this->model->product = $this->model->getDetailsData($productId);
+          if ($this->model->product)
+          {
+            $this->model->setPage("product_details");
+          }
+        }
+        break;
+      case 'shoppingcart':
+        $this->model = new WebshopModel($this->model);
+        $this->model->cartActions();
+        $this->model->setPage("shoppingcart");
+        break;
+
+      
       // case 'add_product':
       //   $data = validateAddProduct();
       //   $this->model->setData('addData', $data);
@@ -225,8 +189,6 @@ class PageController
       //   }
       //   break;
     }
-    // Render the appropriate view
-    // $this->showResponsePage();
   }
 
   private function showResponsePage()
@@ -237,7 +199,6 @@ class PageController
     {
       case 'home':
       case 'logout':
-        // require_once('../views/HomeDoc.php');
         $view = new HomeDoc($this->model);
         break;
       case 'about':
@@ -263,9 +224,6 @@ class PageController
         break;
       case 'product_details':
         $view = new ProductdetailsDoc($this->model);
-        break;
-      case 'shopping_cart':
-        $view = new ShoppingcartDoc($this->model);
         break;
       case 'top5':
         $view = new Top5Doc($this->model);

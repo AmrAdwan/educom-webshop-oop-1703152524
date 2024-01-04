@@ -41,14 +41,38 @@ class WebshopModel extends PageModel
     }
   }
 
+  public function setPage($newPage)
+  {
+    $allowedPages = [
+      'webshop',
+      'product_details',
+      'add_product',
+      'edit_product',
+      'shoppingcart',
+    ];
+    if (in_array($newPage, $allowedPages))
+    {
+      $this->page = $newPage;
+    }
+  }
+  public function isUserLoggedIn()
+  {
+    return $this->sessionManager->isUserLoggedIn();
+  }
+
+  public function isUserAdmin()
+  {
+    return $this->sessionManager->isUserAdmin();
+  }
+
   public function getWebshopData()
   {
-    $this->products = getProducts();
+    return getProducts();
   }
 
   public function getDetailsData($productId)
   {
-    $this->product = getProductById($productId);
+    return getProductById($productId);
   }
 
   public function getCartLines()
@@ -90,6 +114,7 @@ class WebshopModel extends PageModel
     }
   }
 
+
   protected function updateCartQuantity($productId, $quantity)
   {
     if (isset($_SESSION['cart'][$productId]))
@@ -114,6 +139,7 @@ class WebshopModel extends PageModel
 
   protected function processCheckout()
   {
+
     $userId = $_SESSION['user_id'];
     $cartItems = $this->getCartLines();
 
@@ -122,7 +148,6 @@ class WebshopModel extends PageModel
 
     if ($orderPlaced)
     {
-      // echo "<script>alert('Hello!');</script>";
       echo '<script language="javascript">alert("Order Placed Successfully! Thank you for your order!");</script>';
       $_SESSION['cart'] = []; // Empty the cart
     }
