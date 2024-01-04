@@ -1,5 +1,4 @@
 <?php
-// include_once 'models/pageModel.php';
 include_once 'models/UserModel.php';
 include_once 'models/WebshopModel.php';
 
@@ -11,7 +10,6 @@ class PageController
 
   public function __construct()
   {
-    // $this->model = $model;
     $this->model = new PageModel(NULL);
   }
 
@@ -26,47 +24,6 @@ class PageController
   {
     $this->model->getRequestedPage();
   }
-  // A list of allowed pages
-  // $allowedPages = [
-  //   'home',
-  //   'about',
-  //   'contact',
-  //   'register',
-  //   'login',
-  //   'logout',
-  //   'change_password',
-  //   'thanks',
-  //   'webshop',
-  //   'product_details',
-  //   'shoppingcart',
-  //   'top5',
-  //   'add_product',
-  //   'edit_product'
-  // ];
-
-  // // Check if it's a POST request
-  // if ($_SERVER['REQUEST_METHOD'] === 'POST')
-  // {
-  //   // Check the page field to determine which form was submitted
-  //   if (isset($_POST['page']))
-  //   {
-  //     return $_POST['page'];
-  //   }
-  // }
-
-  // // Retrieving the 'page' parameter from the GET request
-  // $requestedPage = $_GET['page'] ?? null;
-
-  // // Check whether the requested page is in the list of allowed pages
-  // if (in_array($requestedPage, $allowedPages))
-  // {
-  //   return $requestedPage;
-  // }
-
-  // // Return '404' for any other cases
-  // return '404';
-  // }
-
   // business flow code
   private function processRequest()
   {
@@ -148,7 +105,7 @@ class PageController
         break;
       case 'add_product':
         $this->model = new WebshopModel($this->model);
-        $product = $this->model->validateAddProduct();
+        $this->model->validateAddProduct();
         if ($this->model->valid)
         {
           saveProduct(
@@ -160,31 +117,24 @@ class PageController
           $this->model->setPage("webshop");
         }
         break;
-
-      // case 'edit_product':
-      //   if (isset($_GET['product_id']) || isset($_POST['product_id']))
-      //   {
-      //     $productId = $_GET['product_id'] ?? $_POST['product_id'];
-      //     $product = getProductById($productId);
-      //     if ($product)
-      //     {
-      //       $data = validaEditProduct($product);
-      //       $this->model->setData('editData', $data);
-      //       if ($data['editvalid'])
-      //       {
-      //         $editData = $data['editData'];
-      //         editProduct(
-      //           $editData['editid'],
-      //           $editData['editname'],
-      //           $editData['editprice'],
-      //           $editData['editdescription'],
-      //           $editData['editimage']
-      //         );
-      //         $this->model->setData('page', 'webshop');
-      //       }
-      //     }
-      //   }
-      //   break;
+      case 'edit_product':
+        $this->model = new WebshopModel($this->model);
+        $productId = $_GET['product_id'] ?? $_POST['product_id'];
+        $product = getProductById($productId);
+        // var_dump($product);
+        $this->model->validateEditProduct($product);
+        if ($this->model->valid)
+        {
+          editProduct(
+            $this->model->editId,
+            $this->model->editName,
+            $this->model->editPrice,
+            $this->model->editDescription,
+            $this->model->editImage
+          );
+          $this->model->setPage("webshop");
+        }
+        break;
     }
   }
 

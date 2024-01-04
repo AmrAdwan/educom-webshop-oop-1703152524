@@ -53,7 +53,6 @@ class UserModel extends PageModel
     $this->errors = [];
     $this->name = $this->userId = '';
 
-    // if ($_SERVER['REQUEST_METHOD'] === 'POST')
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['page']) && $_POST['page'] === 'login')
     {
       // Get email and password from POST request and assign to class properties
@@ -358,53 +357,5 @@ class UserModel extends PageModel
   {
     return updatePassword($email, $hashedPassword);
   }
-
-
-  // Update user password
-  // public function updateUserPassword($email, $newPassword)
-  // {
-  //   $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-  //   return $this->updateUserPassword($email, $hashedPassword);
-  // }
-
-
-  // public function setUserData($userId, $name, $email)
-  // {
-  //   $this->userId = $userId;
-  //   $this->userName = $name;
-  //   $this->userEmail = $email;
-
-  //   $this->setData('userId', $userId);
-  //   $this->setData('userName', $name);
-  //   $this->setData('userEmail', $email);
-  // }
-
-  // public function getUserId()
-  // {
-  //   return $this->userId;
-  // }
-
-  // public function getUserName()
-  // {
-  //   return $this->userName;
-  // }
-
-  // public function getUserEmail()
-  // {
-  //   return $this->userEmail;
-  // }
-
-  // Authentication function
-  // public function authenticateUser($email, $password)
-  // {
-  //   return authenticateUser($email, $password);
-  // }
-
-  // // Check if email exists
-  // public function doesEmailExist($email)
-  // {
-  //   return doesEmailExist($email);
-  // }
-
 }
 ?>

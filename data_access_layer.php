@@ -344,9 +344,4 @@ function editProduct($id, $productName, $productPrice, $productDescription, $ima
 
   return $success;
 }
-
-
-
-// Close the database connection at the end of the script
-// $conn->close();
 ?>

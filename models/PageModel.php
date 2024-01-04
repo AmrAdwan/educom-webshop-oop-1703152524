@@ -4,8 +4,6 @@ include_once 'MenuItem.php';
 
 class PageModel
 {
-  // private $data = [];
-
   public $page;
   protected $isPost = false;
   public $menu;

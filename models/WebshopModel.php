@@ -13,6 +13,11 @@ class WebshopModel extends PageModel
   public $prodDescription = '';
   public $prodPrice = '';
   public $prodImage = '';
+  public $editId = '';
+  public $editName = '';
+  public $editDescription = '';
+  public $editPrice = '';
+  public $editImage = '';
 
   public function __construct($pageModel)
   {
@@ -160,12 +165,6 @@ class WebshopModel extends PageModel
 
   public function validateAddProduct()
   {
-    $addProductData = [
-      'prodname' => '',
-      'proddescription' => '',
-      'prodprice' => '',
-      'prodimage' => ''
-    ];
     $this->errors = [];
     $this->valid = false;
 
@@ -177,70 +176,40 @@ class WebshopModel extends PageModel
       $this->prodPrice = $this->getPostVar('prodprice');
       $this->prodImage = $_FILES['prodimage'] ?? null;
 
-      // $this->prodImage = $this->getPostVar('prodimage');
-
-      // foreach ($addProductData as $key => &$value)
-      // {
-      //   if ($key != 'prodimage')
-      //   {
-      //     $value = $_POST[$key] ?? '';
-      //   } else
-      //   {
-      //     $value = $_FILES[$key] ?? '';
-      //   }
-      // }
-
       // Validate product name
-      // if (empty($addProductData['prodname']))
       if (empty($this->prodName))
       {
         $this->errors['prodname'] = 'Product name is required.';
       }
 
       // Validate product price
-      // if (empty($addProductData['prodprice']) || !is_numeric($addProductData['prodprice']) || $addProductData['prodprice'] < 0)
       if (empty($this->prodPrice || !is_numeric($this->prodPrice) || $this->prodPrice < 0))
       {
         $this->errors['prodprice'] = 'Valid product price is required.';
       }
 
       // Validate description
-      // if (empty($addProductData['proddescription']))
       if (empty($this->prodDescription))
       {
         $this->errors['proddescription'] = 'Product description is required.';
       }
 
-      // Validate image
-      // if (empty($addProductData['prodimage']['name']))
-      // {
-      //   $this->errors['prodimage'] = 'Product image is required.';
-      // } else
-      // {
-      //   // Check for valid image types (PNG, GIF, JPEG) and size (less than 2 MB)
-      //   $allowedTypes = ['image/png', 'image/gif', 'image/jpeg'];
-      //   $maxSize = 2 * 1024 * 1024; // 2MB
-
-      //   if (!in_array($addProductData['prodimage']['type'], $allowedTypes))
-      //   {
-      //     $this->errors['prodimage'] = 'Invalid image type. Allowed types: PNG, GIF, JPEG.';
-      //   } elseif ($addProductData['prodimage']['size'] > $maxSize)
-      //   {
-      //     $this->errors['prodimage'] = 'Image size too large. Maximum size: 2MB.';
-      //   }
-      // }
       // Validate image upload
-      if (!$this->prodImage || $this->prodImage['error'] !== UPLOAD_ERR_OK) {
+      if (!$this->prodImage || $this->prodImage['error'] !== UPLOAD_ERR_OK)
+      {
         $this->errors['prodimage'] = 'Product image is required.';
-      } else {
+      } else
+      {
         // Validate image type and size
         $allowedTypes = ['image/png', 'image/gif', 'image/jpeg'];
         $maxSize = 2 * 1024 * 1024; // 2MB
 
-        if (!in_array($this->prodImage['type'], $allowedTypes)) {
-            $this->errors['prodimage'] = 'Invalid image type. Allowed types: PNG, GIF, JPEG.';
-        } elseif ($this->prodImage['size'] > $maxSize) {
-            $this->errors['prodimage'] = 'Image size too large. Maximum size: 2MB.';
+        if (!in_array($this->prodImage['type'], $allowedTypes))
+        {
+          $this->errors['prodimage'] = 'Invalid image type. Allowed types: PNG, GIF, JPEG.';
+        } elseif ($this->prodImage['size'] > $maxSize)
+        {
+          $this->errors['prodimage'] = 'Image size too large. Maximum size: 2MB.';
         }
       }
 
@@ -254,89 +223,101 @@ class WebshopModel extends PageModel
 
     return [
       'addvalid' => $this->valid,
-      // 'addData' => $addProductData,
       'addData' => [
-      'prodname' => $this->prodName,
-      'proddescription' => $this->prodDescription,
-      'prodprice' => $this->prodPrice,
-      'prodimage' => $this->prodImage
+        'prodname' => $this->prodName,
+        'proddescription' => $this->prodDescription,
+        'prodprice' => $this->prodPrice,
+        'prodimage' => $this->prodImage
       ],
       'errors' => $this->errors
     ];
   }
 
-  public function validaEditProduct($product)
+  public function validateEditProduct($product)
   {
-    $editProductData = [
-      'editid' => $product['id'],
-      'editname' => $product['name'],
-      'editdescription' => $product['description'],
-      'editprice' => $product['price'],
-      'editimage' => $product['file_name']
-    ];
+    // var_dump($product);
+    // Initialize properties with the existing product data
+    $this->editId = $product['id'];
+    $this->editName = $product['name'];
+    $this->editDescription = $product['description'];
+    $this->editPrice = $product['price'];
+    // $this->editImage = $product['file_name'];
+
     $this->errors = [];
     $this->valid = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST')
     {
-
-      // Update with submitted data
-      $editProductData = [
-        'editid' => $_POST['editid'] ?? $product['id'],
-        'editname' => $_POST['editname'] ?? $product['name'],
-        'editdescription' => $_POST['editdescription'] ?? $product['description'],
-        'editprice' => $_POST['editprice'] ?? $product['price'],
-        'editimage' => $_FILES['editimage']['name'] ?? $product['file_name']
-      ];
+      // Update properties with submitted data
+      $this->editId = $_POST['editid'] ?? $this->editId;
+      $this->editName = $_POST['editname'] ?? $this->editName;
+      $this->editDescription = $_POST['editdescription'] ?? $this->editDescription;
+      $this->editPrice = $_POST['editprice'] ?? $this->editPrice;
+      $this->editImage = $_FILES['editimage']['name'] ?? $this->editImage;
 
       // Validate product name
-      if (empty($editProductData['editname']))
+      if (empty($this->editName))
       {
         $this->errors['editname'] = 'Product name is required.';
       }
 
       // Validate product price
-      if (empty($editProductData['editprice']) || !is_numeric($editProductData['editprice']) || $editProductData['editprice'] < 0)
+      if (empty($this->editPrice) || !is_numeric($this->editPrice) || $this->editPrice < 0)
       {
         $this->errors['editprice'] = 'Valid product price is required.';
       }
 
       // Validate description
-      if (empty($editProductData['editdescription']))
+      if (empty($this->editDescription))
       {
         $this->errors['editdescription'] = 'Product description is required.';
       }
 
-      // Validate image if a new image is being uploaded
-      if ($editProductData['editimage'] && $editProductData['editimage'] !== $product['file_name'])
+      // Check if an image file is uploaded
+      if (isset($_FILES['editimage']) && $_FILES['editimage']['error'] === UPLOAD_ERR_OK)
       {
-        // Check for valid image types (PNG, GIF, JPEG) and size (less than 2 MB)
+        // Validate image type and size
         $allowedTypes = ['image/png', 'image/gif', 'image/jpeg'];
         $maxSize = 2 * 1024 * 1024; // 2MB
 
-        if (!in_array($editProductData['editimage']['type'], $allowedTypes))
+        if (!in_array($_FILES['editimage']['type'], $allowedTypes))
         {
           $this->errors['editimage'] = 'Invalid image type. Allowed types: PNG, GIF, JPEG.';
-        } elseif ($editProductData['editimage']['size'] > $maxSize)
+        } elseif ($_FILES['editimage']['size'] > $maxSize)
         {
           $this->errors['editimage'] = 'Image size too large. Maximum size: 2MB.';
+        } else
+        {
+          // File is valid, update the editImage property to the new file name
+          $this->editImage = $_FILES['editimage']['name'];
         }
+      } else
+      {
+        // No new image uploaded, keep the old image
+        $this->editImage = $product['file_name'];
       }
+
 
       // Check if there are no errors
       if (empty($this->errors))
       {
         $this->valid = true;
-        $editProductData['editimage'] = $editProductData['editimage'] ?? $product['file_name'];
       }
     }
 
     return [
       'editvalid' => $this->valid,
-      'editData' => $editProductData,
+      'editData' => [
+        'editid' => $this->editId,
+        'editname' => $this->editName,
+        'editdescription' => $this->editDescription,
+        'editprice' => $this->editPrice,
+        'editimage' => $this->editImage
+      ],
       'errors' => $this->errors
     ];
   }
+
 
 
 

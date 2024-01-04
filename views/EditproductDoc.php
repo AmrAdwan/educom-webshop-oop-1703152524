@@ -11,10 +11,14 @@ class EditproductDoc extends ProductDoc
 
   protected function showContent()
   {
-    $editProductResult = $this->model->getData('editData');
-    $this->showForm($editProductResult);
-  }
+    // $editProductResult = $this->model->getData('editData');
 
+    $productId = $_GET['product_id'] ?? $_POST['product_id'];
+    $product = getProductById($productId);
+    $editProductResult = $this->model->validateEditProduct($product);
+    $this->showForm($editProductResult);
+
+  }
   protected function getError($editProductResult, $key)
   {
     return isset($editProductResult['errors'][$key]) ? $editProductResult['errors'][$key] : '';
@@ -63,7 +67,7 @@ class EditproductDoc extends ProductDoc
 
       // Image Upload
       echo "<label for=\"editimage\">Product Image:</label>";
-      echo "<input type=\"file\" id=\"editimage\" name=\"editimage\ . value\"" . ($editProductData['editimage']?? '') . "\">";
+      echo "<input type=\"file\" id=\"editimage\" name=\"editimage\" . value\"" . ($editProductData['editimage']?? '') . "\">";
       echo "<span class=\"error\">*" . $this->getError($editProductResult, 'editimage') . "</span>";
 
       echo "<br>";
