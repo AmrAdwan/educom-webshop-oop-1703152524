@@ -195,8 +195,6 @@ class UserModel extends PageModel
     ];
     $this->errors = [];
 
-    // $valid = false;
-
     // check whether the form is sent
     if ($_SERVER['REQUEST_METHOD'] === 'POST')
     {

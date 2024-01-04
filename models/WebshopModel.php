@@ -8,6 +8,11 @@ class WebshopModel extends PageModel
   public $product = '';
   public $cartLines = '';
   public $cartTotal = '';
+  public $valid = false;
+  public $prodName = '';
+  public $prodDescription = '';
+  public $prodPrice = '';
+  public $prodImage = '';
 
   public function __construct($pageModel)
   {
@@ -152,6 +157,189 @@ class WebshopModel extends PageModel
       $_SESSION['cart'] = []; // Empty the cart
     }
   }
+
+  public function validateAddProduct()
+  {
+    $addProductData = [
+      'prodname' => '',
+      'proddescription' => '',
+      'prodprice' => '',
+      'prodimage' => ''
+    ];
+    $this->errors = [];
+    $this->valid = false;
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST')
+    {
+      // Fetch POST data
+      $this->prodName = $this->getPostVar('prodname');
+      $this->prodDescription = $this->getPostVar('proddescription');
+      $this->prodPrice = $this->getPostVar('prodprice');
+      $this->prodImage = $_FILES['prodimage'] ?? null;
+
+      // $this->prodImage = $this->getPostVar('prodimage');
+
+      // foreach ($addProductData as $key => &$value)
+      // {
+      //   if ($key != 'prodimage')
+      //   {
+      //     $value = $_POST[$key] ?? '';
+      //   } else
+      //   {
+      //     $value = $_FILES[$key] ?? '';
+      //   }
+      // }
+
+      // Validate product name
+      // if (empty($addProductData['prodname']))
+      if (empty($this->prodName))
+      {
+        $this->errors['prodname'] = 'Product name is required.';
+      }
+
+      // Validate product price
+      // if (empty($addProductData['prodprice']) || !is_numeric($addProductData['prodprice']) || $addProductData['prodprice'] < 0)
+      if (empty($this->prodPrice || !is_numeric($this->prodPrice) || $this->prodPrice < 0))
+      {
+        $this->errors['prodprice'] = 'Valid product price is required.';
+      }
+
+      // Validate description
+      // if (empty($addProductData['proddescription']))
+      if (empty($this->prodDescription))
+      {
+        $this->errors['proddescription'] = 'Product description is required.';
+      }
+
+      // Validate image
+      // if (empty($addProductData['prodimage']['name']))
+      // {
+      //   $this->errors['prodimage'] = 'Product image is required.';
+      // } else
+      // {
+      //   // Check for valid image types (PNG, GIF, JPEG) and size (less than 2 MB)
+      //   $allowedTypes = ['image/png', 'image/gif', 'image/jpeg'];
+      //   $maxSize = 2 * 1024 * 1024; // 2MB
+
+      //   if (!in_array($addProductData['prodimage']['type'], $allowedTypes))
+      //   {
+      //     $this->errors['prodimage'] = 'Invalid image type. Allowed types: PNG, GIF, JPEG.';
+      //   } elseif ($addProductData['prodimage']['size'] > $maxSize)
+      //   {
+      //     $this->errors['prodimage'] = 'Image size too large. Maximum size: 2MB.';
+      //   }
+      // }
+      // Validate image upload
+      if (!$this->prodImage || $this->prodImage['error'] !== UPLOAD_ERR_OK) {
+        $this->errors['prodimage'] = 'Product image is required.';
+      } else {
+        // Validate image type and size
+        $allowedTypes = ['image/png', 'image/gif', 'image/jpeg'];
+        $maxSize = 2 * 1024 * 1024; // 2MB
+
+        if (!in_array($this->prodImage['type'], $allowedTypes)) {
+            $this->errors['prodimage'] = 'Invalid image type. Allowed types: PNG, GIF, JPEG.';
+        } elseif ($this->prodImage['size'] > $maxSize) {
+            $this->errors['prodimage'] = 'Image size too large. Maximum size: 2MB.';
+        }
+      }
+
+
+      // Check if there are no errors
+      if (empty($this->errors))
+      {
+        $this->valid = true;
+      }
+    }
+
+    return [
+      'addvalid' => $this->valid,
+      // 'addData' => $addProductData,
+      'addData' => [
+      'prodname' => $this->prodName,
+      'proddescription' => $this->prodDescription,
+      'prodprice' => $this->prodPrice,
+      'prodimage' => $this->prodImage
+      ],
+      'errors' => $this->errors
+    ];
+  }
+
+  public function validaEditProduct($product)
+  {
+    $editProductData = [
+      'editid' => $product['id'],
+      'editname' => $product['name'],
+      'editdescription' => $product['description'],
+      'editprice' => $product['price'],
+      'editimage' => $product['file_name']
+    ];
+    $this->errors = [];
+    $this->valid = false;
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST')
+    {
+
+      // Update with submitted data
+      $editProductData = [
+        'editid' => $_POST['editid'] ?? $product['id'],
+        'editname' => $_POST['editname'] ?? $product['name'],
+        'editdescription' => $_POST['editdescription'] ?? $product['description'],
+        'editprice' => $_POST['editprice'] ?? $product['price'],
+        'editimage' => $_FILES['editimage']['name'] ?? $product['file_name']
+      ];
+
+      // Validate product name
+      if (empty($editProductData['editname']))
+      {
+        $this->errors['editname'] = 'Product name is required.';
+      }
+
+      // Validate product price
+      if (empty($editProductData['editprice']) || !is_numeric($editProductData['editprice']) || $editProductData['editprice'] < 0)
+      {
+        $this->errors['editprice'] = 'Valid product price is required.';
+      }
+
+      // Validate description
+      if (empty($editProductData['editdescription']))
+      {
+        $this->errors['editdescription'] = 'Product description is required.';
+      }
+
+      // Validate image if a new image is being uploaded
+      if ($editProductData['editimage'] && $editProductData['editimage'] !== $product['file_name'])
+      {
+        // Check for valid image types (PNG, GIF, JPEG) and size (less than 2 MB)
+        $allowedTypes = ['image/png', 'image/gif', 'image/jpeg'];
+        $maxSize = 2 * 1024 * 1024; // 2MB
+
+        if (!in_array($editProductData['editimage']['type'], $allowedTypes))
+        {
+          $this->errors['editimage'] = 'Invalid image type. Allowed types: PNG, GIF, JPEG.';
+        } elseif ($editProductData['editimage']['size'] > $maxSize)
+        {
+          $this->errors['editimage'] = 'Image size too large. Maximum size: 2MB.';
+        }
+      }
+
+      // Check if there are no errors
+      if (empty($this->errors))
+      {
+        $this->valid = true;
+        $editProductData['editimage'] = $editProductData['editimage'] ?? $product['file_name'];
+      }
+    }
+
+    return [
+      'editvalid' => $this->valid,
+      'editData' => $editProductData,
+      'errors' => $this->errors
+    ];
+  }
+
+
+
 }
 
 ?>

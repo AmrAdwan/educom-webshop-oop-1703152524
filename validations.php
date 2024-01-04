@@ -276,7 +276,7 @@ function validateChangePassword()
 
     foreach ($changeData as $key => $value)
     {
-      $changeData[$key] = getPostVar($key);
+      $changeData[$key] = $this->getPostVar($key);
     }
 
     // Validation checks

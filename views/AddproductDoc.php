@@ -11,7 +11,8 @@ class AddproductDoc extends ProductDoc
 
   protected function showContent()
   {
-    $addProductResult = $this->model->getData('addData');
+    // $addProductResult = $this->model->getData('addData');
+    $addProductResult = $this->model->validateAddProduct();
     $this->showForm($addProductResult);
   }
 
@@ -24,7 +25,7 @@ class AddproductDoc extends ProductDoc
     if (!isset($addProductResult['addvalid']) || !$addProductResult['addvalid'])
     {
       // Extract form data for convenience
-      $addProductData = $addProductResult['addData'] ?? [];
+      $addProductData = ($addProductResult['addData'] ?? []);
   
       echo "<br><br>";
       echo "<div class=\"formcarry-container\">";

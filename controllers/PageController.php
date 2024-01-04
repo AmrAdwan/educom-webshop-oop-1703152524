@@ -146,23 +146,20 @@ class PageController
         $this->model->cartActions();
         $this->model->setPage("shoppingcart");
         break;
-
-      
-      // case 'add_product':
-      //   $data = validateAddProduct();
-      //   $this->model->setData('addData', $data);
-      //   if ($data['addvalid'])
-      //   {
-      //     $addProductData = $data['addData'];
-      //     saveProduct(
-      //       $addProductData['prodname'],
-      //       $addProductData['proddescription'],
-      //       $addProductData['prodprice'],
-      //       $addProductData['prodimage']['name']
-      //     );
-      //     $this->model->setData('page', 'webshop');
-      //   }
-      //   break;
+      case 'add_product':
+        $this->model = new WebshopModel($this->model);
+        $product = $this->model->validateAddProduct();
+        if ($this->model->valid)
+        {
+          saveProduct(
+            $this->model->prodName,
+            $this->model->prodDescription,
+            $this->model->prodPrice,
+            $this->model->prodImage['name']
+          );
+          $this->model->setPage("webshop");
+        }
+        break;
 
       // case 'edit_product':
       //   if (isset($_GET['product_id']) || isset($_POST['product_id']))
