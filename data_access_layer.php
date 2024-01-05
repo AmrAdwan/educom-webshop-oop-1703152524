@@ -1,6 +1,5 @@
 <?php
 // Database configuration
-
 function connectToDatabase()
 {
   $servername = '127.0.0.1';

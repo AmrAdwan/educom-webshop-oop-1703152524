@@ -25,11 +25,6 @@ class PageModel
       $this->genericErr = $copy->genericErr;
       $this->sessionManager = $copy->sessionManager;
     }
-
-
-    // $this->setData('isLoggedIn', isUserLoggedIn());
-    // $this->setData('userName', getLoggedInUserName());
-    // $this->setData('isAdmin', isUserAdmin());
   }
 
   public function getRequestedPage()
