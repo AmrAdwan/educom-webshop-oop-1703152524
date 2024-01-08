@@ -1,7 +1,7 @@
 <?php
 include_once "../views/DataBase.php";
 
-$db = new DataBase();
+$db = new CRUD();
 $db->CreateConnection();
 
 // Testing Create

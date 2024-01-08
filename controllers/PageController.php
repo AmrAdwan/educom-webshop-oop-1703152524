@@ -1,17 +1,20 @@
 <?php
 include_once 'models/UserModel.php';
 include_once 'models/WebshopModel.php';
-
-
+// include_once '../views/ModelFactory.php';
 
 class PageController
 {
+  private $modelFactory;
   private $model;
 
-  public function __construct()
+  public function __construct(ModelFactory $modelFactory)
   {
-    $this->model = new PageModel(NULL);
+    $this->modelFactory = $modelFactory;
+    $this->model = $this->modelFactory->createModel('Page');
+    // $this->model = new PageModel(NULL);
   }
+
 
   public function handleRequest()
   {
@@ -24,62 +27,76 @@ class PageController
   {
     $this->model->getRequestedPage();
   }
+
   // business flow code
   private function processRequest()
   {
+    // echo "Requested Page: " . $this->model->page;
     switch ($this->model->page)
     {
       case 'login':
-        $this->model = new UserModel($this->model);
+        // $this->model = new UserModel($this->model);
+        $this->model = $this->modelFactory->createModel('User');
         $this->model->validateLogin();
-        // var_dump($this->model);
         if ($this->model->valid)
         {
           $this->model->doLoginUser();
           $this->model->setPage("home");
+        } else
+        {
+          $this->model->setPage("login");
         }
         break;
       case 'contact':
-        $this->model = new UserModel($this->model);
+        $this->model = $this->modelFactory->createModel('User');
         $this->model->validateContact();
         if ($this->model->valid)
         {
           $this->model->setPage("thanks");
+        } else
+        {
+          $this->model->setPage("contact");
         }
         break;
       case 'register':
-        $this->model = new UserModel($this->model);
+        $this->model = $this->modelFactory->createModel('User');
         $user = $this->model->validateRegister();
-        // var_dump($user["registerData"]["regpassword1"]);
         if ($this->model->valid)
         {
-          $this->model->email = $user["registerData"]["regemail"];
-          $this->model->name = $user["registerData"]["regname"];
-          $this->model->password = $user["registerData"]["regpassword1"];
-          saveUser($this->model->email, $this->model->name, $this->model->password);
+          $userData = [
+            'name' => $user["registerData"]["regname"],
+            'email' => $user["registerData"]["regemail"],
+            'password' => password_hash($user["registerData"]["regpassword1"], PASSWORD_DEFAULT)
+          ];
+          $this->model->registerUser($userData);
           $this->model->valid = false;
           $this->model->setPage("login");
+        } else
+        {
+          $this->model->setPage("register");
         }
         break;
       case 'logout':
-        $this->model = new UserModel($this->model);
+        $this->model = $this->modelFactory->createModel('User');
         $this->model->doLogoutUser();
         $this->model->setPage("home");
         break;
       case 'change_password':
-        $this->model = new UserModel($this->model);
+        $this->model = $this->modelFactory->createModel('User');
         $this->model->validateChangePassword();
         if ($this->model->valid)
         {
           $id = $_SESSION['user_id'];
-          $email = findEmailById($id);
-          var_dump($email);
           if (isset($this->model->newPassword))
           {
             $hashedPassword = password_hash($this->model->newPassword, PASSWORD_DEFAULT);
-            updatePassword($email, $hashedPassword);
+            // Use UserCrud to update the password
+            $this->model->updatePassword($id, $hashedPassword);
           }
           $this->model->setPage("home");
+        } else
+        {
+          $this->model->setPage("change_password");
         }
         break;
       case 'webshop':

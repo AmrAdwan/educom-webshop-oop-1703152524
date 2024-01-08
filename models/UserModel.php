@@ -20,9 +20,12 @@ class UserModel extends PageModel
   const RESULT_UNKNOWN_USER = -1;
   const RESULT_WRONG_PASSWORD = -2;
 
-  public function __construct($pageModel)
+  private $userCrud;
+
+  public function __construct($pageModel, $userCrud)
   {
     parent::__construct($pageModel);
+    $this->userCrud = $userCrud;
   }
 
   public function setPage($newPage)
@@ -82,11 +85,11 @@ class UserModel extends PageModel
               $user = $userResult["user"];
               $_SESSION['user_name'] = [
                 'logemail' => $this->email,
-                'logname' => $user['name'],
-                'id' => $user['id']
+                'logname' => $user->name,  // Accessing as object property
+                'id' => $user->id         // Accessing as object property
               ];
-              $this->name = $user['name'];
-              $this->userId = $user['id'];
+              $this->name = $user->name;  // Accessing as object property
+              $this->userId = $user->id;  // Accessing as object property
               $this->valid = true;
               break;
             case self::RESULT_UNKNOWN_USER:
@@ -320,14 +323,27 @@ class UserModel extends PageModel
 
 
 
+  // private function authenticateUser($email, $password)
+  // {
+  //   $user = findUserByEmail($email);
+  //   if (empty($user))
+  //   {
+  //     return ['result' => self::RESULT_UNKNOWN_USER];
+  //   }
+  //   if (!password_verify($password, $user['password']))
+  //   {
+  //     return ['result' => self::RESULT_WRONG_PASSWORD];
+  //   }
+  //   return ['result' => self::RESULT_OK, "user" => $user];
+  // }
   private function authenticateUser($email, $password)
   {
-    $user = findUserByEmail($email);
+    $user = $this->userCrud->readUserByEmail($email);
     if (empty($user))
     {
       return ['result' => self::RESULT_UNKNOWN_USER];
     }
-    if (!password_verify($password, $user['password']))
+    if (!password_verify($password, $user->password))
     {
       return ['result' => self::RESULT_WRONG_PASSWORD];
     }
@@ -344,18 +360,23 @@ class UserModel extends PageModel
   {
     $this->sessionManager->doLogoutUser();
     $this->genericMessage = "Logout successful";
-    // session_destroy();
+  }
+  private function doesEmailExist($email)
+  {
+    $existingUser = $this->userCrud->readUserByEmail($email);
+    return $existingUser !== false && $existingUser !== null;
   }
 
-  public function doesEmailExist($email)
+  public function updatePassword($userId, $hashedPassword)
   {
-    $user = findUserByEmail($email);
-    return $user !== null; // Returns true if user exists, false otherwise
+    // return updatePassword($email, $hashedPassword);
+    return $this->userCrud->updateUserPassword($userId, $hashedPassword);
   }
 
-  public function updatePassword($email, $hashedPassword)
+  public function registerUser($userData)
   {
-    return updatePassword($email, $hashedPassword);
+    // Use UserCrud to create the user
+    return $this->userCrud->createUser($userData);
   }
 }
 ?>

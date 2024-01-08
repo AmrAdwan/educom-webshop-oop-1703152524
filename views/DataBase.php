@@ -1,7 +1,11 @@
 <?php
-class DataBase
+class CRUD
 {
   public $pdo = null;
+  public function __construct()
+  {
+    $this->CreateConnection();
+  }
 
   public function CreateConnection()
   {
