@@ -18,10 +18,12 @@ class WebshopModel extends PageModel
   public $editDescription = '';
   public $editPrice = '';
   public $editImage = '';
+  private $shopCrud;
 
-  public function __construct($pageModel)
+  public function __construct($pageModel, $shopCrud)
   {
     parent::__construct($pageModel);
+    $this->shopCrud = $shopCrud;
   }
 
 
@@ -59,6 +61,7 @@ class WebshopModel extends PageModel
       'add_product',
       'edit_product',
       'shoppingcart',
+      'top5'
     ];
     if (in_array($newPage, $allowedPages))
     {
@@ -77,12 +80,16 @@ class WebshopModel extends PageModel
 
   public function getWebshopData()
   {
-    return getProducts();
+    // return getProducts();
+    // var_dump($this->shopCrud->readAllProducts());
+    return $this->shopCrud->readAllProducts();
   }
 
   public function getDetailsData($productId)
   {
-    return getProductById($productId);
+    // return getProductById($productId);
+    // var_dump($this->shopCrud->readProductById($productId));
+    return $this->shopCrud->readProductById($productId);
   }
 
   public function getCartLines()
@@ -96,11 +103,11 @@ class WebshopModel extends PageModel
     $this->cartLines = [];
     foreach ($_SESSION['cart'] as $productId => $quantity)
     {
-      $this->product = getProductById($productId);
+      $this->product = $this->shopCrud->readProductById($productId);
       if ($this->product)
       {
-        $this->product['quantity'] = $quantity;
-        $this->product['subtotal'] = $quantity * $this->product['price'];
+        $this->product->quantity = $quantity;
+        $this->product->subtotal = $quantity * $this->product->price;
         $this->cartLines[] = $this->product;
       }
     }
@@ -154,13 +161,28 @@ class WebshopModel extends PageModel
     $cartItems = $this->getCartLines();
 
     // Call insertOrder to save the order in the database
-    $orderPlaced = insertOrder($userId, $cartItems);
+    // $orderPlaced = insertOrder($userId, $cartItems);
+    $orderPlaced = $this->shopCrud->createOrder($userId, $cartItems);
 
     if ($orderPlaced)
     {
       echo '<script language="javascript">alert("Order Placed Successfully! Thank you for your order!");</script>';
       $_SESSION['cart'] = []; // Empty the cart
     }
+  }
+
+  public function AddNewProduct($product)
+  {
+    return $this->shopCrud->createProduct($product);
+  }
+
+  public function EditProduct($productId, $product)
+  {
+    return $this->shopCrud->updateProduct($productId, $product);
+  }
+  public function getTop5Products()
+  {
+    return $this->shopCrud->readTop5Products();
   }
 
   public function validateAddProduct()
@@ -235,13 +257,15 @@ class WebshopModel extends PageModel
 
   public function validateEditProduct($product)
   {
-    // var_dump($product);
+    // var_dump($product->name);
+    // echo "name == = == = " . $product->name;
     // Initialize properties with the existing product data
-    $this->editId = $product['id'];
-    $this->editName = $product['name'];
-    $this->editDescription = $product['description'];
-    $this->editPrice = $product['price'];
+    $this->editId = $product->id;
+    $this->editName = $product->name;
+    $this->editDescription = $product->description;
+    $this->editPrice = $product->price;
     // $this->editImage = $product['file_name'];
+
 
     $this->errors = [];
     $this->valid = false;
@@ -294,7 +318,7 @@ class WebshopModel extends PageModel
       } else
       {
         // No new image uploaded, keep the old image
-        $this->editImage = $product['file_name'];
+        $this->editImage = $product->file_name;
       }
 
 

@@ -26,26 +26,26 @@ class ShoppingcartDoc extends BasicDoc
     foreach ($cartItems as $item)
     {
       echo "<div class='cart-item'>";
-      echo "<a href='index.php?page=product_details&product_id=" . $item['id'] . "' style='cursor: pointer;'>";
-      echo "<img src='Images/" . $item['file_name'] . "' alt='" . $item['name'] . "' style='width: 25%;' />";
+      echo "<a href='index.php?page=product_details&product_id=" . $item->id . "' style='cursor: pointer;'>";
+      echo "<img src='Images/" . $item->file_name . "' alt='" . $item->name . "' style='width: 25%;' />";
       echo "</a>";
 
-      echo "<h3>" . $item['name'] . "</h3>";
-      echo "<p>Price: $" . $item['price'] . "</p>";
-      echo "<p>Quantity: " . $item['quantity'] . "</p>";
-      echo "<p>Subtotal: $" . $item['subtotal'] . "</p>";
+      echo "<h3>" . $item->name . "</h3>";
+      echo "<p>Price: $" . $item->price . "</p>";
+      echo "<p>Quantity: " . $item->quantity . "</p>";
+      echo "<p>Subtotal: $" . $item->subtotal . "</p>";
 
       // Form for updating quantity with plus and minus buttons
       echo "<form onsubmit='handleSubmit(this); return false;' method='post'>";
       echo "<input type='hidden' name='page' value='shoppingcart'>";
       echo "<input type='hidden' name='action' value='update'>";
-      echo "<input type='hidden' name='product_id' value='" . $item['id'] . "'>";
+      echo "<input type='hidden' name='product_id' value='" . $item->id . "'>";
 
       // Minus button
       echo "<button type='button' onclick='changeQuantity(this, -1)'>&minus;</button>";
 
       // Quantity display
-      echo "<input class='quantity' name='quantity' value='" . $item['quantity'] . "' min='1' readonly>";
+      echo "<input class='quantity' name='quantity' value='" . $item->quantity . "' min='1' readonly>";
 
       // Plus button
       echo "<button type='button' onclick='changeQuantity(this, 1)'>&plus;</button>";
@@ -58,7 +58,7 @@ class ShoppingcartDoc extends BasicDoc
       echo "<form onsubmit='handleSubmit(this); return false;' method='post'>";
       echo "<input type='hidden' name='page' value='shoppingcart'>";
       echo "<input type='hidden' name='action' value='remove'>";
-      echo "<input type='hidden' name='product_id' value='" . $item['id'] . "'>";
+      echo "<input type='hidden' name='product_id' value='" . $item->id . "'>";
       echo "<button style=\"font-size:24px; color:red\" color><i class=\"material-icons\">delete</i></button>";
       echo "</form>";
 
@@ -66,7 +66,7 @@ class ShoppingcartDoc extends BasicDoc
 
       echo "</div>";
 
-      $totalPrice += $item['subtotal'];
+      $totalPrice += $item->subtotal;
     }
     echo "<form action='index.php' method='post'>";
     echo "<input type='hidden' name='page' value='shoppingcart'>";
@@ -107,98 +107,6 @@ class ShoppingcartDoc extends BasicDoc
     </script>";
 
   }
-
-
-
-  // public function addToCart($productId)
-  // {
-  //   if (!isset($_SESSION['cart']))
-  //   {
-  //     $_SESSION['cart'] = [];
-  //   }
-
-  //   // Check if the product is already in the cart
-  //   if (isset($_SESSION['cart'][$productId]))
-  //   {
-  //     $_SESSION['cart'][$productId]++; // Increase quantity
-  //   } else
-  //   {
-  //     $_SESSION['cart'][$productId] = 1; // Add product with quantity 1
-  //   }
-  // }
-
-
-  // public function getCartItems()
-  // {
-  //   if (!isset($_SESSION['cart']))
-  //   {
-  //     return [];
-  //   }
-
-  //   $cartItems = [];
-  //   foreach ($_SESSION['cart'] as $productId => $quantity)
-  //   {
-  //     $product = getProductById($productId);
-  //     if ($product)
-  //     {
-  //       $product['quantity'] = $quantity;
-  //       $product['subtotal'] = $quantity * $product['price'];
-  //       $cartItems[] = $product;
-  //     }
-  //   }
-  //   return $cartItems;
-  // }
-
-  // protected function updateCartQuantity($productId, $quantity)
-  // {
-  //   if (isset($_SESSION['cart'][$productId]))
-  //   {
-  //     if ($quantity > 0)
-  //     {
-  //       $_SESSION['cart'][$productId] = $quantity;
-  //     } else
-  //     {
-  //       unset($_SESSION['cart'][$productId]); // Remove item if quantity is 0
-  //     }
-  //   }
-  // }
-
-  // protected function removeFromCart($productId)
-  // {
-  //   if (isset($_SESSION['cart'][$productId]))
-  //   {
-  //     unset($_SESSION['cart'][$productId]);
-  //   }
-  // }
-
-  // protected function calculateTotalPrice($cartItems)
-  // {
-  //   $totalPrice = 0;
-
-  //   foreach ($cartItems as $item)
-  //   {
-  //     $totalPrice += $item['price'] * $item['quantity'];
-  //   }
-
-  //   return $totalPrice;
-  // }
-
-
-  // protected function processCheckout()
-  // {
-  //   $userId = $_SESSION['user_id'];
-  //   $cartItems = $this->getCartItems();
-
-  //   // Call insertOrder to save the order in the database
-  //   $orderPlaced = insertOrder($userId, $cartItems);
-
-  //   if ($orderPlaced)
-  //   {
-  //     // echo "<script>alert('Hello!');</script>";
-  //     echo '<script language="javascript">alert("Order Placed Successfully! Thank you for your order!");</script>';
-  //     $_SESSION['cart'] = []; // Empty the cart
-  //   }
-  // }
 }
 
 ?>

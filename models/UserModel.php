@@ -85,11 +85,11 @@ class UserModel extends PageModel
               $user = $userResult["user"];
               $_SESSION['user_name'] = [
                 'logemail' => $this->email,
-                'logname' => $user->name,  // Accessing as object property
-                'id' => $user->id         // Accessing as object property
+                'logname' => $user->name,  
+                'id' => $user->id         
               ];
-              $this->name = $user->name;  // Accessing as object property
-              $this->userId = $user->id;  // Accessing as object property
+              $this->name = $user->name;  
+              $this->userId = $user->id; 
               $this->valid = true;
               break;
             case self::RESULT_UNKNOWN_USER:
@@ -320,22 +320,6 @@ class UserModel extends PageModel
       'errors' => $this->errors,
     ];
   }
-
-
-
-  // private function authenticateUser($email, $password)
-  // {
-  //   $user = findUserByEmail($email);
-  //   if (empty($user))
-  //   {
-  //     return ['result' => self::RESULT_UNKNOWN_USER];
-  //   }
-  //   if (!password_verify($password, $user['password']))
-  //   {
-  //     return ['result' => self::RESULT_WRONG_PASSWORD];
-  //   }
-  //   return ['result' => self::RESULT_OK, "user" => $user];
-  // }
   private function authenticateUser($email, $password)
   {
     $user = $this->userCrud->readUserByEmail($email);
@@ -369,7 +353,6 @@ class UserModel extends PageModel
 
   public function updatePassword($userId, $hashedPassword)
   {
-    // return updatePassword($email, $hashedPassword);
     return $this->userCrud->updateUserPassword($userId, $hashedPassword);
   }
 

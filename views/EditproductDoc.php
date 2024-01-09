@@ -14,7 +14,8 @@ class EditproductDoc extends ProductDoc
     // $editProductResult = $this->model->getData('editData');
 
     $productId = $_GET['product_id'] ?? $_POST['product_id'];
-    $product = getProductById($productId);
+    $product = $this->model->getDetailsData($productId);
+    // var_dump($product);
     $editProductResult = $this->model->validateEditProduct($product);
     $this->showForm($editProductResult);
 
@@ -34,7 +35,7 @@ class EditproductDoc extends ProductDoc
       echo "<div class=\"formcarry-container\">";
       echo "<form action=\"index.php\" method=\"POST\" enctype=\"multipart/form-data\" class=\"formcarry-form\">";
       echo "<input type=\"hidden\" name=\"page\" value=\"edit_product\">";
-      echo "<input type=\"hidden\" name=\"product_id\" value=\"" . ($editProductData['editid']?? '') . "'>";
+      echo "<input type=\"hidden\" name=\"product_id\" value=\"" . ($editProductData['editid'] ?? '') . '">';
 
 
 

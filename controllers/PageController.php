@@ -100,11 +100,13 @@ class PageController
         }
         break;
       case 'webshop':
-        $this->model = new WebshopModel($this->model);
+        // $this->model = new WebshopModel($this->model);
+        $this->model = $this->modelFactory->createModel('Shop');
         $this->model->setPage("webshop");
         break;
       case 'product_details':
-        $this->model = new WebshopModel($this->model);
+        // $this->model = new WebshopModel($this->model);
+        $this->model = $this->modelFactory->createModel('Shop');
         if (isset($_GET['product_id']))
         {
           $productId = $_GET['product_id'];
@@ -116,41 +118,57 @@ class PageController
         }
         break;
       case 'shoppingcart':
-        $this->model = new WebshopModel($this->model);
+        // $this->model = new WebshopModel($this->model);
+        $this->model = $this->modelFactory->createModel('Shop');
         $this->model->cartActions();
         $this->model->setPage("shoppingcart");
         break;
       case 'add_product':
-        $this->model = new WebshopModel($this->model);
+        // $this->model = new WebshopModel($this->model);
+        $this->model = $this->modelFactory->createModel('Shop');
         $this->model->validateAddProduct();
         if ($this->model->valid)
         {
-          saveProduct(
-            $this->model->prodName,
-            $this->model->prodDescription,
-            $this->model->prodPrice,
-            $this->model->prodImage['name']
-          );
+          // saveProduct(
+          $product = [
+            'name' => $this->model->prodName,
+            'price' => $this->model->prodPrice,
+            'description' => $this->model->prodDescription,
+            'file_name' => $this->model->prodImage['name']
+          ];
+          $this->model->AddNewProduct($product);
           $this->model->setPage("webshop");
+        } else
+        {
+          $this->model->setPage("add_product");
         }
         break;
       case 'edit_product':
-        $this->model = new WebshopModel($this->model);
+        // $this->model = new WebshopModel($this->model);
+        $this->model = $this->modelFactory->createModel('Shop');
         $productId = $_GET['product_id'] ?? $_POST['product_id'];
-        $product = getProductById($productId);
+        $product = $this->model->getDetailsData($productId);
         // var_dump($product);
         $this->model->validateEditProduct($product);
         if ($this->model->valid)
         {
-          editProduct(
-            $this->model->editId,
-            $this->model->editName,
-            $this->model->editPrice,
-            $this->model->editDescription,
-            $this->model->editImage
-          );
+          $editProduct = [
+            // 'id' =>  $this->model->editId,
+            'name' => $this->model->editName,
+            'price' => $this->model->editPrice,
+            'description' => $this->model->editDescription,
+            'file_name' => $this->model->editImage
+          ];
+          $this->model->EditProduct($productId, $editProduct);
           $this->model->setPage("webshop");
+        } else
+        {
+          $this->model->setPage("edit_product");
         }
+        break;
+      case 'top5':
+        $this->model = $this->modelFactory->createModel('Shop');
+        $this->model->setPage("top5");
         break;
     }
   }

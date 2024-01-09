@@ -29,11 +29,12 @@ class CRUD
     try
     {
       $stmt = $this->pdo->prepare($sql);
-
+      // var_dump($params);
       foreach ($params as $key => &$value)
       {
         $stmt->bindValue($key, $value);
       }
+      // var_dump($stmt);
 
       $stmt->setFetchMode(PDO::FETCH_OBJ);
       $stmt->execute();
@@ -50,12 +51,7 @@ class CRUD
   {
     try
     {
-      $stmt = $this->pdo->prepare($sql);
-      foreach ($params as $key => $value)
-      {
-        $stmt->bindValue($key, $value);
-      }
-      $stmt->execute();
+      $this->PrepareAndExecute($sql, $params);
       return $this->pdo->lastInsertId();
     } catch (PDOException $e)
     {
@@ -72,6 +68,7 @@ class CRUD
       {
         $stmt->bindValue($key, $value);
       }
+      // $stmt  = $this->PrepareAndExecute($sql, $params);
       $stmt->execute();
       return $stmt->fetch(PDO::FETCH_OBJ);
     } catch (PDOException $e)
