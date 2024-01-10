@@ -63,14 +63,8 @@ class CRUD
   {
     try
     {
-      $stmt = $this->pdo->prepare($sql);
-      foreach ($params as $key => $value)
-      {
-        $stmt->bindValue($key, $value);
-      }
-      // $stmt  = $this->PrepareAndExecute($sql, $params);
-      $stmt->execute();
-      return $stmt->fetch(PDO::FETCH_OBJ);
+      $results = $this->PrepareAndExecute($sql, $params);
+      return $results[0] ?? null; // Return the first row if available, otherwise null
     } catch (PDOException $e)
     {
       echo "Query failed: " . $e->getMessage();
