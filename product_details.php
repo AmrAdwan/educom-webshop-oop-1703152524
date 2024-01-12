@@ -24,7 +24,7 @@ function showProductDetails($product)
       // Edit Product Button
       if (isUserAdmin())
       {
-        echo "<input type='hidden' name='product_id' value='" . $product['id'] . "'>"; 
+        echo "<input type='hidden' name='product_id' value='" . $product['id'] . "'>";
         echo "<a href='index.php?page=edit_product&product_id=" . $product['id'] .
           "'><button type=\"button\" class=\"btn btn-primary btn-block\"> Edit Product </button></a>";
       }

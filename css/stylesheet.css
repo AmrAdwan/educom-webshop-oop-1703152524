@@ -77,13 +77,25 @@ footer {
   display: table;
 }
 
-.btn-block{
+.btn-block {
   width: 80%;
   align-content: center;
   align-self: center;
 }
-.btn-primary{
+.btn-primary {
   background-color: rgb(42, 160, 228);
   color: white;
   cursor: pointer;
+}
+
+.checked {
+  color: orange;
+}
+.star-input {
+  cursor: pointer;
+  color: #ddd;
+}
+
+.star-input.checked {
+  color: #ffc107; /* Gold color */
 }

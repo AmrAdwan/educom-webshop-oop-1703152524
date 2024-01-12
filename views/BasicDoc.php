@@ -34,6 +34,8 @@ class BasicDoc extends HtmlDoc
     echo "<link rel=\"stylesheet\" href=\"./CSS/stylesheet.css\">";
     echo "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">";
     echo "<link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">";
+    echo "<link href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\" rel=\"stylesheet\">";
+    echo "<script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>";
   }
 
   protected function showBodyContent()

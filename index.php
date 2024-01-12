@@ -20,20 +20,21 @@ include 'views/ChangePasswordDoc.php';
 include 'views/ErrorDoc.php';
 require_once('controllers/PageController.php');
 require_once('views/ModelFactory.php');
-
+require_once('views/RatingCrud.php');
 
 // Create an instance of CRUD
 $crud = new CRUD();
 
-// Create ModelFactory and pass the CRUD instance
-$modelFactory = new ModelFactory($crud);
-
-// Create PageController and pass the ModelFactory instance
-$controller = new PageController($modelFactory);
-$controller->handleRequest();
-
-
-
-
-// $controller = new PageController();
-// $controller->handleRequest();
+// Check if the request is for AJAX
+if (isset($_GET['action']) && $_GET['action'] === 'ajax')
+{
+  // Handle AJAX requests
+  $ajaxController = new AjaxController($crud);
+  $ajaxController->handleRequest();
+} else
+{
+  // Handle regular page requests
+  $modelFactory = new ModelFactory($crud);
+  $controller = new PageController($modelFactory);
+  $controller->handleRequest();
+}

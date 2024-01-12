@@ -1,7 +1,7 @@
 <?php
 include_once 'models/UserModel.php';
 include_once 'models/WebshopModel.php';
-// include_once '../views/ModelFactory.php';
+include_once 'AjaxController.php';
 
 class PageController
 {

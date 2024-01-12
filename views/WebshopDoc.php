@@ -11,6 +11,8 @@ class WebshopDoc extends BasicDoc
   protected function showContent()
   {
     $this->model->products = $this->model->getWebshopData();
+    $averageRatings = $this->model->getAverageRatingsForAllProducts();
+
     // var_dump($this->model->products);
 
     echo "<div class=\"row\">";
@@ -40,6 +42,15 @@ class WebshopDoc extends BasicDoc
       echo "<h3>" . $product->name . "</h3>";
       echo "<h3>Price: €" . $product->price . "</h3>";
 
+      // Display average rating
+      if (isset($averageRatings[$product->id]))
+      {
+        echo "<div class='average-rating'>Average Rating: " . $this->generateStarRating($averageRatings[$product->id]) . "</div>";
+      } else
+      {
+        echo "<div class='average-rating'>No ratings yet</div>";
+      }
+
       if ($this->model->isUserLoggedIn())
       {
         echo "<form action='index.php' method='post' onsubmit='redirectToCart()'>";
@@ -54,6 +65,25 @@ class WebshopDoc extends BasicDoc
       echo "</div>";
     }
     echo "</div>";
+  }
+
+  private function generateStarRating($rating)
+  {
+    $starHtml = '';
+    for ($i = 1; $i <= 5; $i++)
+    {
+      if ($i <= $rating)
+      {
+        $starHtml .= '<span class="fa fa-star checked"></span>';
+      } elseif ($i - 0.5 <= $rating)
+      {
+        $starHtml .= '<span class="fa fa-star-half-o checked"></span>';
+      } else
+      {
+        $starHtml .= '<span class="fa fa-star-o"></span>';
+      }
+    }
+    return $starHtml;
   }
 }
 

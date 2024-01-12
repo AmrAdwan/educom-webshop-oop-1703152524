@@ -19,11 +19,13 @@ class WebshopModel extends PageModel
   public $editPrice = '';
   public $editImage = '';
   private $shopCrud;
+  public $ratingCrud;
 
-  public function __construct($pageModel, $shopCrud)
+  public function __construct($pageModel, $shopCrud, $ratingCrud)
   {
     parent::__construct($pageModel);
     $this->shopCrud = $shopCrud;
+    $this->ratingCrud = $ratingCrud;
   }
 
 
@@ -184,6 +186,23 @@ class WebshopModel extends PageModel
   {
     return $this->shopCrud->readTop5Products();
   }
+
+  public function getAverageRatingForProduct($productId)
+  {
+    return $this->ratingCrud->getAverageRating($productId);
+  }
+
+  public function getAverageRatingsForAllProducts()
+  {
+    $ratings = $this->ratingCrud->getAllAverageRatings();
+    $averageRatings = [];
+    foreach ($ratings as $rating)
+    {
+      $averageRatings[$rating->product_id] = $rating->average_rating;
+    }
+    return $averageRatings;
+  }
+
 
   public function validateAddProduct()
   {
